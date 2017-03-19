@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="j1Window.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Audio.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1App.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Input.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Main.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Textures.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1FileSystem.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="PugiXml\src\pugixml.cpp">
+      <Filter>Engine\4. Tools ===========\PuguiXML</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Timer.cpp">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1PerfTimer.cpp">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Fonts.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Gui.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Render.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Console.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="p2Log.cpp">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions.cpp">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Scene.cpp">
+      <Filter>Engine\3. Scenes ==========</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Engine\2. Components ======</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Viewports.cpp">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>Engine\3. Scenes ==========\MainScene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="j1Window.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Audio.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1App.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Input.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Module.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Render.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Textures.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1FileSystem.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="PugiXml\src\pugiconfig.hpp">
+      <Filter>Engine\4. Tools ===========\PuguiXML</Filter>
+    </ClInclude>
+    <ClInclude Include="PugiXml\src\pugixml.hpp">
+      <Filter>Engine\4. Tools ===========\PuguiXML</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Timer.h">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1PerfTimer.h">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Fonts.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Gui.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Console.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Scene.h">
+      <Filter>Engine\3. Scenes ==========</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Engine\3. Scenes ==========</Filter>
+    </ClInclude>
+    <ClInclude Include="p2Defs.h">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="p2Log.h">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="p2PQueue.h">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="p2SString.h">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Engine\2. Components ======</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Viewports.h">
+      <Filter>Engine\1. Modules =========</Filter>
+    </ClInclude>
+    <ClInclude Include="p2Point.h">
+      <Filter>Engine\4. Tools ===========</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuScene.h">
+      <Filter>Engine\3. Scenes ==========\MainScene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{cb944693-b9d0-484c-bad2-02d5a7cdbec6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\1. Modules =========">
+      <UniqueIdentifier>{244722d1-90ce-423d-8e7a-556211865a32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\2. Components ======">
+      <UniqueIdentifier>{1f876cd5-245d-4ca8-a70a-e144dbbc8c53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3. Scenes ==========">
+      <UniqueIdentifier>{e07660eb-d36f-4cc9-af59-324d31c2f2f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\4. Tools ===========">
+      <UniqueIdentifier>{42c748be-4a37-49de-970f-5be811d06b38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\4. Tools ===========\PuguiXML">
+      <UniqueIdentifier>{7cb78d67-17cc-45eb-af97-e2106becce7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3. Scenes ==========\MainScene">
+      <UniqueIdentifier>{761216c5-ef11-4ade-a433-a3c76ce1b8f3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
