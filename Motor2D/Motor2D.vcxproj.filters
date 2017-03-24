@@ -61,6 +61,10 @@
     <ClCompile Include="MenuScene.cpp">
       <Filter>Engine\3. Scenes ==========\MainScene</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="DataDrivenUI.cpp">
+      <Filter>Engine\1. Modules =========\DataDrivenUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -141,6 +145,9 @@
     <ClInclude Include="MenuScene.h">
       <Filter>Engine\3. Scenes ==========\MainScene</Filter>
     </ClInclude>
+    <ClInclude Include="DataDrivenUI.h">
+      <Filter>Engine\1. Modules =========\DataDrivenUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -164,5 +171,13 @@
     <Filter Include="Engine\3. Scenes ==========\MainScene">
       <UniqueIdentifier>{761216c5-ef11-4ade-a433-a3c76ce1b8f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\1. Modules =========\DataDrivenUI">
+      <UniqueIdentifier>{bc3b394e-b0f5-4943-b9b0-5713afde1050}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\Game\ui.xml">
+      <Filter>Engine\1. Modules =========\DataDrivenUI</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

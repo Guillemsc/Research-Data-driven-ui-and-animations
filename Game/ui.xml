@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<file>
+     <scene name = "menu_scene">
+         <Window name ="main_window" position_x = "10" position_y = "10" size_w = "300" size_h = "300" blit_layer = "1" dinamic = "true" is_ui ="true">
+
+
+         </Window>
+     </scene>
+</file>
+
+ <!--
+......... UI Elements .........
+
+<Window position_x = "" position_y = "" size_w = "" size_h = "" dinamic = "">
+
+
+</Window>
+
+<Button>
+
+</Button>
+-->

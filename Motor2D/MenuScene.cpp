@@ -1,6 +1,6 @@
 #include "MenuScene.h"
 
-MenuScene::MenuScene()
+MenuScene::MenuScene() : Scene("menu_scene")
 {
 }
 

@@ -23,6 +23,7 @@ class j1Fonts;
 class j1Gui;
 class j1Console;
 class j1Viewports;
+class DataDrivenUI;
 
 class j1App
 {
@@ -109,6 +110,7 @@ public:
 	j1Gui*				gui = NULL;
 	j1Console*			console = NULL;
 	j1Viewports*        view = NULL;
+	DataDrivenUI*		data_ui = NULL;
 
 	// Console logs
 	list<string>        logs;

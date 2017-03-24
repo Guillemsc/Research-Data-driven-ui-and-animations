@@ -17,6 +17,7 @@
 #include "j1App.h"
 #include "j1Console.h"
 #include "j1Viewports.h"
+#include "DataDrivenUI.h"
 
 // Constructor
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
@@ -34,6 +35,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	gui = new j1Gui();
 	console = new j1Console();
 	view = new j1Viewports();
+	data_ui = new DataDrivenUI();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -45,6 +47,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(console);
 	AddModule(view);
+	AddModule(data_ui);
 
 	// Scene
 	AddModule(scene);
@@ -461,7 +464,7 @@ void j1App::FrameRateCalculations()
 		bug_report_button_color->SetColor({ 50, 50, 50, 255 });
 	if (bug_report_button->MouseClickOutLeft())
 	{
-		OpenWebPage("https://github.com/rogerta97/Project2_Zelda/issues");
+		OpenWebPage("https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/issues");
 		bug_report_button_color->SetColor({ 30, 30, 30, 255 });
 	}
 

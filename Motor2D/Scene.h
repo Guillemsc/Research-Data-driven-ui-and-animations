@@ -11,7 +11,7 @@
 class Scene
 {
 public:
-	Scene() {};
+	Scene(char* _name) { name = _name; };
 
 	virtual ~Scene() {};
 
@@ -31,6 +31,8 @@ public:
 		return true;
 	}
 
+	char* GetName() { return name; };
+
 	virtual void OnCommand(std::list<std::string>& tokens) {}
 
 	virtual void OnCVar(std::list<std::string>& tokens) {}
@@ -40,8 +42,10 @@ public:
 	virtual bool isDone() { return change_scene; }
 
 protected:
-
 	bool change_scene = false; 
+
+private:
+	char* name;
 
 };
 
