@@ -81,6 +81,37 @@ void DataDrivenUI::LoadScene(char* name)
 			scene->AddElement(DDUI_Element(name.c_str(), curr_win));
 
 			// Get Window elements
+			for (pugi::xml_node element_node = window_node.child("Element"); element_node; element_node = element_node.next_sibling("Element"))
+			{
+				// Button
+				if (TextCmp(element_node.attribute("type").as_string(""), "Button"))
+				{
+					iPoint pos = { element_node.attribute("position_x").as_int(0), element_node.attribute("position_y").as_int(0) };
+					string name = element_node.attribute("name").as_string("");
+					int size_w = element_node.attribute("size_w").as_int(0);
+					int size_h = element_node.attribute("size_h").as_int(0);
+					bool dinamic = element_node.attribute("dinamic").as_bool(false);
+
+					UI_Button* button = curr_win->CreateButton(pos, size_w, size_h, dinamic);
+					scene->AddElement(DDUI_Element(name.c_str(), button));
+				}
+				else if (TextCmp(element_node.attribute("type").as_string(""), "Text"))
+				{
+					iPoint pos = { element_node.attribute("position_x").as_int(0), element_node.attribute("position_y").as_int(0) };
+					string name = element_node.attribute("name").as_string("");
+					int font = element_node.attribute("font").as_int(0);
+					int spacing = element_node.attribute("spacing").as_int(0);
+					int r = element_node.attribute("color_r").as_int(0);
+					int g = element_node.attribute("color_g").as_int(0);
+					int b = element_node.attribute("color_r").as_int(0);
+					bool dinamic = element_node.attribute("dinamic").as_bool(false);
+					string t = element_node.child("Text").attribute("text").as_string("");
+					
+					UI_Text* text = curr_win->CreateText(pos, App->font->GetFont(font), spacing, dinamic, r, g, b);
+					text->SetText(t.c_str());
+
+				}
+			}
 		}
 
 

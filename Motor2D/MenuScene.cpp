@@ -1,4 +1,5 @@
 #include "MenuScene.h"
+#include "j1Gui.h"
 
 MenuScene::MenuScene() : Scene("menu_scene")
 {
@@ -7,8 +8,6 @@ MenuScene::MenuScene() : Scene("menu_scene")
 bool MenuScene::Start()
 {
 	bool ret = true;
-
-
 
 	return ret;
 }

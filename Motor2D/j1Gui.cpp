@@ -691,7 +691,7 @@ UI_Window::~UI_Window()
 bool UI_Window::update()
 {
 	if (App->gui->debug)
-		App->render->DrawQuad(rect, color.r, color.g, color.b, color.a, false);
+		App->render->DrawQuad(rect, color.r, color.g, color.b, -1.0f, color.a, false);
 
 	return true;
 }
@@ -955,13 +955,13 @@ bool UI_Button::update()
 	{
 		if (!is_gameplay)
 			App->render->Blit(App->gui->atlas, rect.x, rect.y, &curr);
-		//else
-		//{
-		//	if (is_ui)
-		//		App->view->LayerBlit(LAYER, App->gui->atlas, iPoint(rect.x, rect.y), curr, viewport, -1.0f, false);
-		//	else
-		//		App->view->LayerBlit(LAYER, App->gui->atlas, iPoint(rect.x, rect.y), curr);
-		//}
+		else
+		{
+			if (is_ui)
+				App->view->LayerBlit(LAYER, App->gui->atlas, iPoint(rect.x, rect.y), curr, viewport, -1.0f, false);
+			else
+				App->view->LayerBlit(LAYER, App->gui->atlas, iPoint(rect.x, rect.y), curr);
+		}
 	}
 
 	ChangeButtonStats();

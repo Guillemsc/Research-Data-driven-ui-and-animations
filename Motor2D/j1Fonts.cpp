@@ -113,3 +113,21 @@ bool j1Fonts::CalcSize(const char* text, int& width, int& height, _TTF_Font* fon
 
 	return ret;
 }
+
+_TTF_Font* j1Fonts::GetFont(int number)
+{
+	_TTF_Font* ret = nullptr;
+
+	int acumulator = 0;
+	for (list<_TTF_Font*>::iterator it = fonts.begin(); it != fonts.end(); it++)
+	{
+		if (number == acumulator)
+		{
+			ret = *it;
+			break;
+		}
+		++acumulator;
+	}
+
+	return ret;
+}

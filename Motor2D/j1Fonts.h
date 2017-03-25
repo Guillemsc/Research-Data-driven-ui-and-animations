@@ -7,6 +7,7 @@
 
 #define DEFAULT_FONT "fonts/open_sans/OpenSans-Regular.ttf"
 #define DEFAULT_FONT_SIZE 12
+#define GET_VARIABLE_NAME(Variable) (#Variable)
 
 struct SDL_Texture;
 struct _TTF_Font;
@@ -32,6 +33,8 @@ public:
 	SDL_Texture* Print(const char* text, SDL_Color color = {255, 255, 255, 255}, _TTF_Font* font = NULL);
 
 	bool CalcSize(const char* text, int& width, int& height, _TTF_Font* font = NULL) const;
+
+	_TTF_Font* GetFont(int number);
 
 public:
 	std::list<_TTF_Font*>	fonts;
