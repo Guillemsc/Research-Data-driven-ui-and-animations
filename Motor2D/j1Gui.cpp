@@ -443,7 +443,7 @@ void j1Gui::DeleteElement(UI_Element* element)
 	App->gui->GetChilds(element, childs);
 
 	// Delete element and it's childs
-	for (list<UI_Element*>::iterator ch = childs.begin(); ch != childs.end(); ch++)
+	for (list<UI_Element*>::iterator ch = childs.begin(); ch != childs.end();)
 	{
 		if (*ch == nullptr && (*ch)->parent->childs.size() > 0)
 			(*ch)->parent->childs.erase(ch);
@@ -452,25 +452,19 @@ void j1Gui::DeleteElement(UI_Element* element)
 			(*ch)->parent_element->childs.erase(ch);
 
 		if ((*ch)->type == ui_window && windows.size() > 0)
+		{
 			windows.remove((UI_Window*)*ch);
+		}
 
 		// Delete from pQ
 		list<UI_Element*> to_add;
 
-		while (App->gui->elements_list.Count() > 0)
-		{
-			UI_Element* current = nullptr;
-			App->gui->elements_list.Pop(current);
-
-			if (current != *ch)
-				to_add.push_back(current);
-		}
-
-		for (list<UI_Element*>::iterator ta = to_add.begin(); ta != to_add.end(); ta++)
-			App->gui->elements_list.Push((*ta), (*ta)->layer);
+		App->gui->EraseFromElementsList(*ch);
 
 		(*ch)->cleanup();
 		RELEASE((*ch));
+
+		ch = childs.erase(ch);
 	}
 }
 
@@ -965,6 +959,8 @@ void UI_Button::Set(iPoint _pos, int w, int h)
 	rect.h = h;
 
 	color.r = color.g = color.b = color.a = 255;
+
+	curr = idle;
 }
 
 bool UI_Button::update()
@@ -987,6 +983,16 @@ bool UI_Button::update()
 				App->view->LayerBlit(LAYER, App->gui->atlas, iPoint(rect.x, rect.y), curr);
 		}
 	}
+
+	if (MouseEnter())
+		curr = over;
+	else if (MouseClickEnterLeft())
+		curr = pressed;
+	else if (MouseClickOutLeft())
+		curr = over;
+	else if (MouseOut())
+		curr = idle;
+	
 
 	ChangeButtonStats();
 
@@ -1160,6 +1166,21 @@ void UI_Button::SetImage(char* name)
 			break;
 		}
 	}
+}
+
+void UI_Button::SetIdle(SDL_Rect rect)
+{
+	idle = rect;
+}
+
+void UI_Button::SetPressed(SDL_Rect rect)
+{
+	pressed = rect;
+}
+
+void UI_Button::SetOver(SDL_Rect rect)
+{
+	over = rect;
 }
 
 // -----------------------------------

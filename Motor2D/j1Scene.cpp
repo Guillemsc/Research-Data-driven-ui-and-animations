@@ -9,6 +9,7 @@
 #include "j1Scene.h"
 #include "j1Console.h"
 #include "MenuScene.h"
+#include "SecondScene.h"
 
 #define NUMBER_OF_PLAYERS 4
 
@@ -42,6 +43,7 @@ bool j1Scene::Start()
 
 	// Creating scenes
 	menu_scene = new MenuScene();
+	second_scene = new SecondScene();
 	// -------------
 
 	// Starting scene

@@ -98,6 +98,7 @@
     <ClCompile Include="j1Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SecondScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -127,6 +128,7 @@
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SecondScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\Game\ui.xml" />

@@ -264,6 +264,10 @@ public:
 	void AddImage(const char* name, SDL_Rect rect);
 	void SetImage(char* name);
 
+	void SetIdle(SDL_Rect rect);
+	void SetPressed(SDL_Rect rect);
+	void SetOver(SDL_Rect rect);
+
 private:
 	void ChangeButtonStats();
 
@@ -281,6 +285,11 @@ private:
 
 	bool			  to_clicked_right = false;
 	bool			  clicked_right = false;
+
+	SDL_Rect		  idle = NULLRECT;
+	SDL_Rect		  pressed = NULLRECT;
+	SDL_Rect		  over = NULLRECT;
+
 };
 
 // ----------------------------

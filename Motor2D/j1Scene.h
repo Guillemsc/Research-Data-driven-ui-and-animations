@@ -8,6 +8,7 @@
 struct SDL_Texture;
 
 class MenuScene;
+class SecondScene;
 
 class j1Scene : public j1Module
 {
@@ -49,6 +50,7 @@ public:
 public:
 	// Scenes
 	MenuScene*   menu_scene = nullptr;
+	SecondScene* second_scene = nullptr;
 
 private:
 	// Scenes list

@@ -1,14 +1,14 @@
-#ifndef _MAINSCENE_
-#define _MAINSCENE_
+#ifndef _SECONDSCENE_
+#define _SECONDSCENE_
 
 #include "Scene.h"
 
-class MenuScene : public Scene
+class SecondScene : public Scene
 {
 public:
-	MenuScene();
+	SecondScene();
 
-	virtual ~MenuScene();
+	virtual ~SecondScene();
 
 	bool Start();
 	bool PreUpdate();

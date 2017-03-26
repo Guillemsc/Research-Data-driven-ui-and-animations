@@ -23,6 +23,10 @@ bool DataDrivenUI::Start()
 	// LoadXML
 	App->LoadXML(XML_NAME, xml);
 
+	// Save starting scene
+	current_scene = App->scene->GetCurrentScene();
+
+	// Load UI for starting scene
 	LoadScene(App->scene->GetCurrentScene()->GetName());
 
 	return ret;
@@ -32,7 +36,13 @@ bool DataDrivenUI::Update(float dt)
 {
 	bool ret = true;
 
-
+	// Change UI when changing scene
+	if (current_scene != App->scene->GetCurrentScene())
+	{
+		LoadScene(App->scene->GetCurrentScene()->GetName());
+		UnloadScene(current_scene->GetName());
+		current_scene = App->scene->GetCurrentScene();
+	}
 
 	return ret;
 }
@@ -41,18 +51,25 @@ bool DataDrivenUI::CleanUp()
 {
 	bool ret = true;
 
-
+	// Unload current scene
+	UnloadScene(current_scene->GetName());
 
 	return ret;
 }
 
-UI_Element * DataDrivenUI::GetElementByName(char * name)
+UI_Element* DataDrivenUI::GetElementByName(char * name)
 {
+	UI_Element* ret = nullptr;
+
 	for (int i = 0; i < scenes.size(); i++)
 	{
+		DDUI_Element* curr = scenes.at(i)->FindElement(name);
 
-		scenes.at(i)->
+		if (curr != nullptr)
+			ret = curr->GetElement();
 	}
+
+	return ret;
 }
 
 void DataDrivenUI::LoadScene(char* name)
@@ -77,11 +94,28 @@ void DataDrivenUI::LoadScene(char* name)
 			// Get Window elements
 			vector<UI_Element*> elements;
 			CheckForElements(window_node, scene, curr_win, elements);
-		
 		}
 
 		scenes.push_back(scene);
 	}
+}
+
+void DataDrivenUI::UnloadScene(char * name)
+{
+	// Get Scenes
+	for(vector<DDUI_Scene*>::iterator it = scenes.begin(); it!= scenes.end();)
+	{
+		if (TextCmp((*it)->GetName(), name))
+		{
+			(*it)->DeleteElements();
+			RELEASE(*it);
+			scenes.erase(it);
+			break;
+		}
+		else
+			++it;
+	}
+
 }
 
 void DataDrivenUI::CheckForElements(pugi::xml_node window_node, DDUI_Scene * scene, UI_Window * curr_win, vector<UI_Element*>& added_elements)
@@ -121,7 +155,7 @@ void DataDrivenUI::CheckForGeneralVars(pugi::xml_node element_node, UI_Element *
 	{
 		if (TextCmp(var_node.attribute("click_through").name(), "click_through"))
 		{
-			element->click_through = var_node.attribute("click_throug").as_bool(false);
+			element->click_through = var_node.attribute("click_through").as_bool(false);
 		}
 		else if (TextCmp(var_node.attribute("blit_layer").name(), "blit_layer"))
 		{
@@ -149,7 +183,7 @@ UI_Window* DataDrivenUI::AddWindow(pugi::xml_node window_node, DDUI_Scene* scene
 	bool is_ui = window_node.attribute("is_ui").as_bool(true);
 
 	UI_Window* curr_win = App->gui->UI_CreateWin(pos, size_w, size_h, blit, false, dinamic, is_ui);
-	scene->AddElement(DDUI_Element(name.c_str(), curr_win));
+	scene->AddElement(new DDUI_Element(name.c_str(), curr_win));
 
 	return curr_win;
 }
@@ -163,10 +197,11 @@ UI_Button * DataDrivenUI::AddButton(pugi::xml_node element_node, DDUI_Scene * sc
 	bool dinamic = element_node.attribute("dinamic").as_bool(false);
 
 	UI_Button* button = window->CreateButton(pos, size_w, size_h, dinamic);
-	scene->AddElement(DDUI_Element(name.c_str(), button));
+	scene->AddElement(new DDUI_Element(name.c_str(), button));
 
 	CheckForGeneralVars(element_node, button);
 
+	// Personal vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
 	{
 		if (TextCmp(var_node.attribute("add_image").name(), "add_image"))
@@ -177,7 +212,13 @@ UI_Button * DataDrivenUI::AddButton(pugi::xml_node element_node, DDUI_Scene * sc
 			rect.y = var_node.attribute("rect_y").as_int();
 			rect.w = var_node.attribute("rect_w").as_int();
 			rect.h = var_node.attribute("rect_h").as_int();
-			button->AddImage(name.c_str(), rect);
+
+			if (TextCmp(name.c_str(), "idle"))
+				button->SetIdle(rect);
+			else if (TextCmp(name.c_str(), "pressed"))
+				button->SetPressed(rect);
+			else if (TextCmp(name.c_str(), "over"))
+				button->SetOver(rect);
 		}
 	}
 
@@ -192,14 +233,15 @@ UI_Text * DataDrivenUI::AddText(pugi::xml_node element_node, DDUI_Scene * scene,
 	int spacing = element_node.attribute("spacing").as_int(0);
 	int r = element_node.attribute("color_r").as_int(0);
 	int g = element_node.attribute("color_g").as_int(0);
-	int b = element_node.attribute("color_r").as_int(0);
+	int b = element_node.attribute("color_b").as_int(0);
 	bool dinamic = element_node.attribute("dinamic").as_bool(false);
 
 	UI_Text* text = curr_win->CreateText(pos, App->font->GetFont(font), spacing, dinamic, r, g, b);
-	scene->AddElement(DDUI_Element(name.c_str(), text));
+	scene->AddElement(new DDUI_Element(name.c_str(), text));
 
 	CheckForGeneralVars(element_node, text);
 
+	// Personal vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
 	{
 		if (TextCmp(var_node.attribute("text").name(), "text"))
@@ -223,10 +265,11 @@ UI_Image * DataDrivenUI::AddImage(pugi::xml_node element_node, DDUI_Scene * scen
 	bool dinamic = element_node.attribute("dinamic").as_bool(false);
 
 	UI_Image* image = curr_win->CreateImage(pos, rect, dinamic);
-	scene->AddElement(DDUI_Element(name.c_str(), image));
+	scene->AddElement(new DDUI_Element(name.c_str(), image));
 
 	CheckForGeneralVars(element_node, image);
 
+	// Personal vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
 	{
 
@@ -243,14 +286,15 @@ UI_Text_Input* DataDrivenUI::AddTextInput(pugi::xml_node element_node, DDUI_Scen
 	int font = element_node.attribute("font").as_int(0);
 	int r = element_node.attribute("color_r").as_int(0);
 	int g = element_node.attribute("color_g").as_int(0);
-	int b = element_node.attribute("color_r").as_int(0);
+	int b = element_node.attribute("color_b").as_int(0);
 	bool dinamic = element_node.attribute("dinamic").as_bool(false);
 
 	UI_Text_Input* text_input = curr_win->CreateTextInput(pos, size_w, App->font->GetFont(font), dinamic, r, g, b);
-	scene->AddElement(DDUI_Element(name.c_str(), text_input));
+	scene->AddElement(new DDUI_Element(name.c_str(), text_input));
 
 	CheckForGeneralVars(element_node, text_input);
 
+	// Personal vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
 	{
 
@@ -269,7 +313,7 @@ UI_Scroll_Bar * DataDrivenUI::AddScrollBar(pugi::xml_node element_node, DDUI_Sce
 	bool dinamic = element_node.attribute("dinamic").as_bool(false);
 
 	UI_Scroll_Bar* scroll_bar = curr_win->CreateScrollBar(pos, size_w, size_h, button_size, dinamic);
-	scene->AddElement(DDUI_Element(name.c_str(), scroll_bar));
+	scene->AddElement(new DDUI_Element(name.c_str(), scroll_bar));
 
 	vector<UI_Element*> elements;
 	CheckForElements(element_node, scene, curr_win, elements);
@@ -282,6 +326,7 @@ UI_Scroll_Bar * DataDrivenUI::AddScrollBar(pugi::xml_node element_node, DDUI_Sce
 		App->gui->EraseFromElementsList(elements.at(i));
 	}
 
+	// Personal vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
 	{
 
@@ -303,10 +348,11 @@ UI_ColoredRect * DataDrivenUI::AddColoredRect(pugi::xml_node element_node, DDUI_
 	bool dinamic = element_node.attribute("dinamic").as_bool(false);
 
 	UI_ColoredRect* colored_rect = curr_window->CreateColoredRect(pos, size_w, size_h, { (Uint8)r, (Uint8)g, (Uint8)b, 255 }, filled, dinamic);
-	scene->AddElement(DDUI_Element(name.c_str(), colored_rect));
+	scene->AddElement(new DDUI_Element(name.c_str(), colored_rect));
 
 	CheckForGeneralVars(element_node, colored_rect);
 
+	// Personal vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
 	{
 
@@ -329,8 +375,39 @@ const char * DDUI_Scene::GetName()
 	return name.c_str();
 }
 
-void DDUI_Scene::AddElement(DDUI_Element element)
+void DDUI_Scene::AddElement(DDUI_Element* element)
 {
+	elements.push_back(element);
+}
+
+DDUI_Element* DDUI_Scene::FindElement(char * name)
+{
+	DDUI_Element* ret = nullptr;
+
+	for (int i = 0; i < elements.size(); i++)
+	{
+		if (TextCmp(elements.at(i)->GetName(), name))
+		{
+			ret = elements.at(i);
+			break;
+		}
+	}
+
+	return ret;
+}
+
+void DDUI_Scene::DeleteElements()
+{
+	for(vector<DDUI_Element*>::iterator it = elements.begin(); it != elements.end();)
+	{
+		if ((*it)->GetElement()->type == ui_window)
+			App->gui->DeleteElement((*it)->GetElement());
+
+		RELEASE(*it);
+		it = elements.erase(it);
+	}
+
+	elements.clear();
 }
 
 DDUI_Element::DDUI_Element(const char * _name, UI_Element* _element)

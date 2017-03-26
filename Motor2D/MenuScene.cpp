@@ -1,7 +1,13 @@
 #include "MenuScene.h"
 #include "j1Gui.h"
+#include "j1Input.h"
+#include "j1Scene.h"
 
 MenuScene::MenuScene() : Scene("menu_scene")
+{
+}
+
+MenuScene::~MenuScene()
 {
 }
 
@@ -25,6 +31,10 @@ bool MenuScene::Update(float dt)
 {
 	bool ret = true;
 
+	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	{
+		App->scene->ChangeScene((Scene*)App->scene->second_scene);
+	}
 
 
 	return ret;

@@ -4,6 +4,7 @@
 #include "j1Module.h"
 #include "j1Render.h"
 
+class Scene;
 class DDUI_Scene;
 class DDUI_Element;
 class UI_Element;
@@ -28,13 +29,20 @@ public:
 
 	bool CleanUp();
 
+	// Returns an UI_Element given the name set on the XML
 	UI_Element* GetElementByName(char* name);
 
 private:
+	// Loads an scene given the scene name
 	void LoadScene(char* name);
 
+	// Unloads an scene given the scene name
+	void UnloadScene(char* name);
+
+	// Given a node, adds the UI_Elements to the window
 	void CheckForElements(pugi::xml_node element_node, DDUI_Scene* scene, UI_Window* curr_win, vector<UI_Element*>& added_elements);
 
+	// Given a node, adds properties to an UI_Element
 	void CheckForGeneralVars(pugi::xml_node element_node, UI_Element* element);
 
 	UI_Window* AddWindow(pugi::xml_node element_node, DDUI_Scene* scene);
@@ -49,7 +57,8 @@ public:
 
 private:
 	vector<DDUI_Scene*> scenes;
-	pugi::xml_document xml;
+	pugi::xml_document  xml;
+	Scene*				current_scene = nullptr;
 
 };
 
@@ -66,7 +75,9 @@ public:
 	~DDUI_Scene();
 
 	const char* GetName();
-	void AddElement(DDUI_Element element);
+	void AddElement(DDUI_Element* element);
+	DDUI_Element* FindElement(char* name);
+	void DeleteElements();
 
 private:
 
@@ -75,7 +86,7 @@ public:
 
 private:
 	string name;
-	vector<DDUI_Element> elements;
+	vector<DDUI_Element*> elements;
 };
 
 // ---------------------------

@@ -65,6 +65,9 @@
     <ClCompile Include="DataDrivenUI.cpp">
       <Filter>Engine\1. Modules =========\DataDrivenUI</Filter>
     </ClCompile>
+    <ClCompile Include="SecondScene.cpp">
+      <Filter>Engine\3. Scenes ==========\SecondScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -148,6 +151,9 @@
     <ClInclude Include="DataDrivenUI.h">
       <Filter>Engine\1. Modules =========\DataDrivenUI</Filter>
     </ClInclude>
+    <ClInclude Include="SecondScene.h">
+      <Filter>Engine\3. Scenes ==========\SecondScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -173,6 +179,9 @@
     </Filter>
     <Filter Include="Engine\1. Modules =========\DataDrivenUI">
       <UniqueIdentifier>{bc3b394e-b0f5-4943-b9b0-5713afde1050}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\3. Scenes ==========\SecondScene">
+      <UniqueIdentifier>{ad71912c-b8b3-4321-aab3-4ae364a356b3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
