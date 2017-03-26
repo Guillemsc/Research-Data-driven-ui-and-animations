@@ -2,12 +2,19 @@
 <file>
      <scene name = "menu_scene">
          <Window name = "main_window" position_x = "300" position_y = "100" size_w = "300" size_h = "300" blit_layer = "1" dinamic = "true" is_ui ="true">
-              <Element type ="Button" name ="button" position_x = "300" position_y = "10" size_w = "50" size_h = "100" dinamic = "true"/>
-              <Element type ="Text" name ="text" position_x ="300" position_y = "100" font ="1" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
-                   <Text text = "dasdsa"/>
-              </Element>/>
            
+               <Element type = "Image" name ="image" position_x ="300" position_y ="50" rect_x ="0" rect_y =" 0" rect_w ="225" rect_h ="219" dinamic ="false"/>
+           
+               <Element type ="Text" name ="text" position_x ="320" position_y = "64" font ="3" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
+                    <var text = "SUPER AWESOME GAME"/>
+               </Element>
 
+               <Element type ="Button" name ="button" position_x = "300" position_y = "100" size_w = "100" size_h = "40" dinamic = "false">
+                    <var add_image ="idle" rect_x ="0" rect.y ="0" rect.w ="0" rect.h ="0"/>
+                    <var add_image ="pressed" rect_x ="0" rect.y ="0" rect.w ="0" rect.h ="0"/>
+                    <var add_image ="mouse_over" rect_x ="0" rect.y ="0" rect.w ="0" rect.h ="0"/>
+               </Element>
+           
          </Window>
      </scene>
 </file>
@@ -17,16 +24,30 @@
 
  <Window name ="main_window" position_x = "10" position_y = "10" size_w = "300" size_h = "300" blit_layer = "1" dinamic = "true" is_ui ="true">
  
- <Button name ="button" position_x = "10" position_y = "10" size_w = "50" size_h = "100" dinamic = "false">
+ <Element type ="Button" name ="button" position_x = "300" position_y = "10" size_w = "50" size_h = "100" dinamic = "true"/>
  
  <Element type ="Text" name ="text" position_x ="300" position_y = "100" font ="1" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
-      <Text text = "dasdsa"/>
-  </Element>/>
-
+       <var text = "SUPER AWESOME GAME"/>
+ </Element>
+  
+ <Element type = "Image" name ="image" position_x ="300" position_y ="50" rect_x ="0" rect_y =" 0" rect_w ="0" rect_h ="0" dinamic ="false"/>
+  
+ <Element type = "TextInput" name = "text_input" position_x = "100" position_y = "400" size_w = "30" font = "1" color_r = "255" color_g = "255" color_b = "255" dinamic = "false"/>
+  
+ <Element type = "ScrollBar" name = "scroll_bar" position_x = "10" position_y = "10" size_w = "300" size_h = "300" button_size = 11, dinamic = "false">
+       <Element type ="Text" name ="text" position_x ="300" position_y = "100" font ="1" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
+             <Text text = "dasdsa"/>
+       </Element>
+ </Element>
+ 
+ <Element type = "ColoredRect" position_x = "10" position_y = "10" size_w = "300" size_h = "300" color_r = "255" color_g = "255" color_b = "255" bool filled = "false" dinamic = "false"/>
+iPoint pos, int view_w, int view_h, SDL_Color color, bool filled = true, bool dinamic = false
 
 </Window>
 
-<Button>
-
-</Button>
+//GENERAL VARS
+<var click_through ="false"/>
+<var blit_layer ="0"/>
+<var enabled ="true"/>
+<var is_ui ="true"/>
 -->

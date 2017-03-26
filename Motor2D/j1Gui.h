@@ -81,6 +81,7 @@ public:
 	bool Move_Elements();
 	UI_Element* CheckClickMove(int x, int y);
 	void DeleteElement(UI_Element * element);
+	void EraseFromElementsList(UI_Element* element);
 
 private:
 
@@ -233,7 +234,7 @@ private:
 struct rect_text
 {
 	rect_text() {};
-	rect_text(char* _name, SDL_Rect _rect) 
+	rect_text(const char* _name, SDL_Rect _rect) 
 	{
 		name = _name;
 		rect = { _rect.x, _rect.y, _rect.w, _rect.h };
@@ -260,7 +261,7 @@ public:
 	bool MouseClickEnterRight();
 	bool MouseClickOutRight();
 
-	void AddImage(char* name, SDL_Rect rect);
+	void AddImage(const char* name, SDL_Rect rect);
 	void SetImage(char* name);
 
 private:

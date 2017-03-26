@@ -7,6 +7,12 @@
 class DDUI_Scene;
 class DDUI_Element;
 class UI_Element;
+class UI_Window;
+class UI_Button;
+class UI_Text;
+class UI_Image;
+class UI_Text_Input;
+class UI_Scroll_Bar;
 
 class DataDrivenUI : public j1Module
 {
@@ -22,9 +28,22 @@ public:
 
 	bool CleanUp();
 
+	UI_Element* GetElementByName(char* name);
+
 private:
-	void LoadUI();
 	void LoadScene(char* name);
+
+	void CheckForElements(pugi::xml_node element_node, DDUI_Scene* scene, UI_Window* curr_win, vector<UI_Element*>& added_elements);
+
+	void CheckForGeneralVars(pugi::xml_node element_node, UI_Element* element);
+
+	UI_Window* AddWindow(pugi::xml_node element_node, DDUI_Scene* scene);
+	UI_Button* AddButton(pugi::xml_node element_node, DDUI_Scene* scene, UI_Window* window);
+	UI_Text* AddText(pugi::xml_node element_node, DDUI_Scene* scene, UI_Window* window);
+	UI_Image* AddImage(pugi::xml_node element_node, DDUI_Scene* scene, UI_Window* window);
+	UI_Text_Input* AddTextInput(pugi::xml_node element_node, DDUI_Scene* scene, UI_Window* window);
+	UI_Scroll_Bar* AddScrollBar(pugi::xml_node element_node, DDUI_Scene* scene, UI_Window* window);
+	UI_ColoredRect* AddColoredRect(pugi::xml_node element_node, DDUI_Scene* scene, UI_Window* window);
 
 public:
 

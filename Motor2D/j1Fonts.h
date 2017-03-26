@@ -40,9 +40,8 @@ public:
 	std::list<_TTF_Font*>	fonts;
 	_TTF_Font*			    default = nullptr;
 	_TTF_Font*			    default_15 = nullptr;
-	_TTF_Font*				game_font = nullptr; 
-	_TTF_Font*				game_font_12 = nullptr; 
-	_TTF_Font*				game_font_small = nullptr;
+	_TTF_Font*				kenvector_future_15 = nullptr;
+	_TTF_Font*				kenvector_future_thin_15 = nullptr;
 
 };
 

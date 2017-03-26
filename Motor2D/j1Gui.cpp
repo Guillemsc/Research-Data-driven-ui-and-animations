@@ -474,6 +474,30 @@ void j1Gui::DeleteElement(UI_Element* element)
 	}
 }
 
+void j1Gui::EraseFromElementsList(UI_Element * to_del)
+{
+	vector<UI_Element*> fill;
+	while (elements_list.Count() > 0)
+	{
+		UI_Element* element;
+		elements_list.Pop(element);
+
+		if (to_del != element)
+			fill.push_back(element);
+		else
+		{
+			if (element == nullptr && element->parent->childs.size() > 0)
+				element->parent->childs.remove(element);
+
+			if (element->parent_element != nullptr && element->parent_element->childs.size() > 0)
+				element->parent_element->childs.remove(element);
+		}
+	}
+
+	for (int i = 0; i < fill.size(); i++)
+		elements_list.Push(fill.at(i), fill.at(i)->layer);
+}
+
 // -----------------------------------
 // ------------------------- Class Gui
 
@@ -1120,7 +1144,7 @@ bool UI_Button::MouseClickOutRight()
 	return false;
 }
 
-void UI_Button::AddImage(char* name, SDL_Rect rect)
+void UI_Button::AddImage(const char* name, SDL_Rect rect)
 {
 	rect_text rt(name, rect);
 	rect_list.push_back(rt);

@@ -38,11 +38,9 @@ bool j1Fonts::Awake(pugi::xml_node& conf)
 
 		path = conf.child("game_font").attribute("file").as_string(DEFAULT_FONT); 
 		size = conf.child("game_font").attribute("size").as_int(DEFAULT_FONT_SIZE);
-		game_font = Load(path, size); 
-		game_font_small = Load(path, 10);
 
-		game_font_12 = Load(path, 12);
-
+		kenvector_future_15 = Load("fonts/kenvector_future.ttf", 15);
+		kenvector_future_thin_15 = Load("fonts/kenvector_future_thin.ttf", 15);
 	}
 
 	return ret;
