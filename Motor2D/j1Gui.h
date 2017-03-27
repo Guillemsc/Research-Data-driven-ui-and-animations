@@ -543,10 +543,13 @@ public:
 	bool update();
 	bool cleanup();
 
-	void AddBox(iPoint pos, int size_w, int size_h, char* name);
+	void AddBox(iPoint pos, int size_w, int size_h, const char* name);
 	bool GetBox(char* name);
 	void SetBox(bool set, char* name);
 	void SetBox(bool set, int i);
+
+	void SetPressed(SDL_Rect rect);
+	void SetIdle(SDL_Rect rect);
 
 private:
 	void CheckControl();

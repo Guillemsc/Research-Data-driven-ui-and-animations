@@ -44,6 +44,8 @@ bool DataDrivenUI::Update(float dt)
 		current_scene = App->scene->GetCurrentScene();
 	}
 
+	PerformActions();
+
 	return ret;
 }
 
@@ -57,7 +59,7 @@ bool DataDrivenUI::CleanUp()
 	return ret;
 }
 
-UI_Element* DataDrivenUI::GetElementByName(char * name)
+UI_Element* DataDrivenUI::GetElementByName(const char * name)
 {
 	UI_Element* ret = nullptr;
 
@@ -66,7 +68,28 @@ UI_Element* DataDrivenUI::GetElementByName(char * name)
 		DDUI_Element* curr = scenes.at(i)->FindElement(name);
 
 		if (curr != nullptr)
+		{
 			ret = curr->GetElement();
+			break;
+		}
+	}
+
+	return ret;
+}
+
+DDUI_Variable * DataDrivenUI::GetVariableByName(const char * name)
+{
+	DDUI_Variable* ret = nullptr;
+
+	for (int i = 0; i < scenes.size(); i++)
+	{
+		DDUI_Variable* curr = scenes.at(i)->FindVariable(name);
+
+		if (curr != nullptr)
+		{
+			ret = curr;
+			break;
+		}
 	}
 
 	return ret;
@@ -100,7 +123,23 @@ void DataDrivenUI::LoadScene(char* name)
 	}
 }
 
-void DataDrivenUI::UnloadScene(char * name)
+DDUI_Scene * DataDrivenUI::GetScene(const char * name)
+{
+	DDUI_Scene* ret = nullptr;
+
+	for (int i = 0; i < scenes.size(); i++)
+	{
+		if (TextCmp(scenes.at(i)->GetName(), name))
+		{
+			ret = scenes.at(i);
+			break;
+		}
+	}
+
+	return ret;
+}
+
+void DataDrivenUI::UnloadScene(const char * name)
 {
 	// Get Scenes
 	for(vector<DDUI_Scene*>::iterator it = scenes.begin(); it!= scenes.end();)
@@ -116,6 +155,25 @@ void DataDrivenUI::UnloadScene(char * name)
 			++it;
 	}
 
+}
+
+void DataDrivenUI::PerformActions()
+{
+	// Get Scenes
+	for (pugi::xml_node scene_node = xml.child("file").child("scene"); scene_node; scene_node = scene_node.next_sibling("scene"))
+	{
+		string scene_name = scene_node.attribute("name").as_string();
+
+		if (!TextCmp(scene_name.c_str(), current_scene->GetName()))
+			continue;
+
+		DDUI_Scene* scene = GetScene(scene_name.c_str());
+
+		for (pugi::xml_node action_node = scene_node.child("Action"); action_node; action_node = action_node.next_sibling("Action"))
+		{
+			CheckForActions(action_node, scene);
+		}
+	}
 }
 
 void DataDrivenUI::CheckForElements(pugi::xml_node window_node, DDUI_Scene * scene, UI_Window * curr_win, vector<UI_Element*>& added_elements)
@@ -146,11 +204,119 @@ void DataDrivenUI::CheckForElements(pugi::xml_node window_node, DDUI_Scene * sce
 		{
 			added_elements.push_back(AddColoredRect(element_node, scene, curr_win));
 		}
+		else if (TextCmp(element_node.attribute("type").as_string(""), "CheckBox"))
+		{
+			added_elements.push_back(AddCheckBox(element_node, scene, curr_win));
+		}
+	}
+}
+
+void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scene)
+{
+	for (pugi::xml_node act_node = action_node.child("act"); act_node; act_node = act_node.next_sibling("act"))
+	{
+		string name = act_node.attribute("name").as_string("");
+
+		// Find Element
+		UI_Element* element = GetElementByName(name.c_str());
+
+		if (element != nullptr)
+		{
+			// Button
+			if (element->type == ui_element::ui_button)
+			{
+				UI_Button* button = (UI_Button*)element;
+
+				// Button Actions
+				if (TextCmp(act_node.attribute("left_pressed").name(), "left_pressed"))
+				{
+					bool pressed = act_node.attribute("left_pressed").as_bool(true);
+
+					if (pressed && button->MouseClickEnterLeft())
+					{
+						CheckForActions(act_node, scene);
+					}
+					else if (!pressed && button->MouseClickOutLeft())
+					{
+						CheckForActions(act_node, scene);
+					}
+				}
+			}
+			// CheckBox
+			else if (element->type == ui_element::ui_check_box)
+			{
+				LOG("");
+			}
+			// Colored rect
+			else if (element->type == ui_element::ui_colored_rect)
+			{
+				LOG("");
+			}
+			// Image
+			else if (element->type == ui_element::ui_image)
+			{
+				LOG("");
+			}
+			// Scroll Bar
+			else if (element->type == ui_element::ui_scroll_bar)
+			{
+				LOG("");
+			}
+			// Text
+			else if (element->type == ui_element::ui_text)
+			{
+				LOG("");
+			}
+			// Text Input
+			else if (element->type == ui_element::ui_text_input)
+			{
+				LOG("");
+			}
+			// Window
+			else if (element->type == ui_element::ui_window)
+			{
+				LOG("");
+			}
+		}
+
+		// Find variable
+		else
+		{
+			DDUI_Variable* variable = GetVariableByName(name.c_str());
+
+			if (variable != nullptr)
+			{
+				// Add to variable
+				if (TextCmp(act_node.attribute("add").name(), "add"))
+				{
+					variable->AddToValue(act_node.attribute("add").as_int());
+				}
+				if (TextCmp(act_node.attribute("substract").name(), "substract"))
+				{
+					variable->SubstractToValue(act_node.attribute("substract").as_int());
+				}
+				// Set to
+				if (TextCmp(act_node.attribute("set_to").name(), "set_to"))
+				{
+					string element_name = act_node.attribute("set_to").as_string("");
+					UI_Element* element = GetElementByName(element_name.c_str());
+
+					if (element->type == ui_element::ui_text)
+					{
+						UI_Text* text = (UI_Text*)element;
+						p2SString str("%0.f", variable->GetValue());
+						string s = str.GetString();
+						text->SetText(s);
+					}
+				}
+			}
+		}
 	}
 }
 
 void DataDrivenUI::CheckForGeneralVars(pugi::xml_node element_node, UI_Element * element)
 {
+	// Vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
 	{
 		if (TextCmp(var_node.attribute("click_through").name(), "click_through"))
@@ -169,6 +335,29 @@ void DataDrivenUI::CheckForGeneralVars(pugi::xml_node element_node, UI_Element *
 		{
 			element->is_ui = var_node.attribute("is_ui").as_bool(true);
 		}
+	}
+}
+
+void DataDrivenUI::AddVars(pugi::xml_node element_node, DDUI_Scene * scene)
+{
+	// New vars
+	for (pugi::xml_node new_var_node = element_node.child("new_var"); new_var_node; new_var_node = new_var_node.next_sibling("new_var"))
+	{
+		int start_value = new_var_node.attribute("start_value").as_int(0);
+		string name = new_var_node.attribute("name").as_string("");
+
+		DDUI_Variable* var = new DDUI_Variable(name.c_str(), start_value);
+
+		if (TextCmp(new_var_node.attribute("max_value").name(), "max_value"))
+		{
+			var->SetMaxValue(new_var_node.attribute("max_value").as_int(0));
+		}
+		if (TextCmp(new_var_node.attribute("min_value").name(), "min_value"))
+		{
+			var->SetMinValue(new_var_node.attribute("min_value").as_int(0));
+		}
+
+		scene->AddVariable(var);
 	}
 }
 
@@ -222,6 +411,8 @@ UI_Button * DataDrivenUI::AddButton(pugi::xml_node element_node, DDUI_Scene * sc
 		}
 	}
 
+	AddVars(element_node, scene);
+
 	return button;
 }
 
@@ -250,6 +441,8 @@ UI_Text * DataDrivenUI::AddText(pugi::xml_node element_node, DDUI_Scene * scene,
 		}
 	}
 
+	AddVars(element_node, scene);
+
 	return text;
 }
 
@@ -275,6 +468,8 @@ UI_Image * DataDrivenUI::AddImage(pugi::xml_node element_node, DDUI_Scene * scen
 
 	}
 
+	AddVars(element_node, scene);
+
 	return image;
 }
 
@@ -292,13 +487,15 @@ UI_Text_Input* DataDrivenUI::AddTextInput(pugi::xml_node element_node, DDUI_Scen
 	UI_Text_Input* text_input = curr_win->CreateTextInput(pos, size_w, App->font->GetFont(font), dinamic, r, g, b);
 	scene->AddElement(new DDUI_Element(name.c_str(), text_input));
 
-	CheckForGeneralVars(element_node, text_input);
+	CheckForGeneralVars(element_node, text_input);;
 
 	// Personal vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
 	{
 
 	}
+
+	AddVars(element_node, scene);
 
 	return text_input;
 }
@@ -325,6 +522,8 @@ UI_Scroll_Bar * DataDrivenUI::AddScrollBar(pugi::xml_node element_node, DDUI_Sce
 		scroll_bar->AddElement(elements.at(i));
 		App->gui->EraseFromElementsList(elements.at(i));
 	}
+
+	AddVars(element_node, scene);
 
 	// Personal vars
 	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
@@ -358,7 +557,54 @@ UI_ColoredRect * DataDrivenUI::AddColoredRect(pugi::xml_node element_node, DDUI_
 
 	}
 
+	AddVars(element_node, scene);
+
 	return colored_rect;
+}
+
+UI_Check_Box * DataDrivenUI::AddCheckBox(pugi::xml_node element_node, DDUI_Scene * scene, UI_Window * curr_window)
+{
+	iPoint pos = { element_node.attribute("position_x").as_int(0), element_node.attribute("position_y").as_int(0) };
+	string name = element_node.attribute("name").as_string("");
+	int size_w = element_node.attribute("size_w").as_int(0);
+	int size_h = element_node.attribute("size_h").as_int(0);
+	bool multiple_choices = element_node.attribute("multiple_choices").as_bool(false);
+	bool dinamic = element_node.attribute("dinamic").as_bool(false);
+
+	UI_Check_Box* check_box = curr_window->CreateCheckBox(pos, size_w, size_h, NULLRECT, NULLRECT, multiple_choices, dinamic);
+	scene->AddElement(new DDUI_Element(name.c_str(), check_box));
+
+	CheckForGeneralVars(element_node, check_box);
+
+	for (pugi::xml_node var_node = element_node.child("var"); var_node; var_node = var_node.next_sibling("var"))
+	{
+		if (TextCmp(var_node.attribute("add_image").name(), "add_image"))
+		{
+			string name = var_node.attribute("add_image").as_string();
+			SDL_Rect rect;
+			rect.x = var_node.attribute("rect_x").as_int();
+			rect.y = var_node.attribute("rect_y").as_int();
+			rect.w = var_node.attribute("rect_w").as_int();
+			rect.h = var_node.attribute("rect_h").as_int();
+
+			if (TextCmp(name.c_str(), "idle"))
+				check_box->SetIdle(rect);
+			else if (TextCmp(name.c_str(), "pressed"))
+				check_box->SetPressed(rect);
+		}
+		else if (TextCmp(var_node.attribute("add_box").name(), "add_box"))
+		{
+			string name = var_node.attribute("add_box").as_string();
+			iPoint pos = { var_node.attribute("position_x").as_int(0), var_node.attribute("position_y").as_int(0) };
+			int size_w = var_node.attribute("size_w").as_int(0);
+			int size_h = var_node.attribute("size_h").as_int(0);
+			check_box->AddBox(pos, size_w, size_h, name.c_str());
+		}
+	}
+
+	AddVars(element_node, scene);
+	
+	return check_box;
 }
 
 DDUI_Scene::DDUI_Scene(const char * _name)
@@ -380,7 +626,12 @@ void DDUI_Scene::AddElement(DDUI_Element* element)
 	elements.push_back(element);
 }
 
-DDUI_Element* DDUI_Scene::FindElement(char * name)
+void DDUI_Scene::AddVariable(DDUI_Variable * var)
+{
+	variables.push_back(var);
+}
+
+DDUI_Element* DDUI_Scene::FindElement(const char * name)
 {
 	DDUI_Element* ret = nullptr;
 
@@ -389,6 +640,22 @@ DDUI_Element* DDUI_Scene::FindElement(char * name)
 		if (TextCmp(elements.at(i)->GetName(), name))
 		{
 			ret = elements.at(i);
+			break;
+		}
+	}
+
+	return ret;
+}
+
+DDUI_Variable * DDUI_Scene::FindVariable(const char * name)
+{
+	DDUI_Variable* ret = nullptr;
+
+	for (int i = 0; i < variables.size(); i++)
+	{
+		if (TextCmp(variables.at(i)->GetName(), name))
+		{
+			ret = variables.at(i);
 			break;
 		}
 	}
@@ -429,3 +696,64 @@ UI_Element * DDUI_Element::GetElement()
 	return element;
 }
 
+DDUI_Variable::DDUI_Variable(const char * _name, float _value)
+{
+	name = _name;
+	value = _value;
+}
+
+DDUI_Variable::~DDUI_Variable()
+{
+}
+
+const char * DDUI_Variable::GetName()
+{
+	return name.c_str();
+}
+
+float DDUI_Variable::GetValue()
+{
+	return value;
+}
+
+void DDUI_Variable::SetValue(float _value)
+{
+	value = _value;
+
+	if (has_max_value && value > max_value)
+		value = max_value;
+	if (has_min_value && value < min_value)
+		value = min_value;
+}
+
+void DDUI_Variable::AddToValue(float addition)
+{
+	value += addition;
+
+	if (has_max_value && value > max_value)
+		value = max_value;
+	if (has_min_value && value < min_value)
+		value = min_value;
+}
+
+void DDUI_Variable::SubstractToValue(float substraction)
+{
+	value -= substraction;
+
+	if (has_max_value && value > max_value)
+		value = max_value;
+	if (has_min_value && value < min_value)
+		value = min_value;
+}
+
+void DDUI_Variable::SetMaxValue(float value)
+{
+	max_value = value;
+	has_max_value = true;
+}
+
+void DDUI_Variable::SetMinValue(float value)
+{
+	min_value = value;
+	has_min_value = true;
+}

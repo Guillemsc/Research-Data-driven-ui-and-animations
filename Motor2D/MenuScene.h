@@ -2,7 +2,8 @@
 #define _MAINSCENE_
 
 #include "Scene.h"
-
+class UI_Button;
+class UI_Text;
 class MenuScene : public Scene
 {
 public:
@@ -25,6 +26,11 @@ public:
 	void OnCVar(std::list<std::string>& tokens);
 
 	void SaveCVar(std::string& cvar_name, pugi::xml_node& node) const;
+
+private:
+	UI_Button* button_minus = nullptr;
+	UI_Button* button_plus = nullptr;
+	UI_Text*   percentage_text = nullptr;
 };
 
 #endif

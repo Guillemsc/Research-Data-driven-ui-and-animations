@@ -42,6 +42,7 @@ public:
 	_TTF_Font*			    default_15 = nullptr;
 	_TTF_Font*				kenvector_future_15 = nullptr;
 	_TTF_Font*				kenvector_future_thin_17 = nullptr;
+	_TTF_Font*				kenvector_future_thin_14 = nullptr;
 
 };
 

@@ -41,6 +41,7 @@ bool j1Fonts::Awake(pugi::xml_node& conf)
 
 		kenvector_future_15 = Load("fonts/kenvector_future.ttf", 15);
 		kenvector_future_thin_17 = Load("fonts/kenvector_future_thin.ttf", 17);
+		kenvector_future_thin_14 = Load("fonts/kenvector_future_thin.ttf", 14);
 	}
 
 	return ret;

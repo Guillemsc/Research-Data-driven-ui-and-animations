@@ -984,6 +984,8 @@ bool UI_Button::update()
 		}
 	}
 
+	ChangeButtonStats();
+
 	if (MouseEnter())
 		curr = over;
 	else if (MouseClickEnterLeft())
@@ -992,9 +994,6 @@ bool UI_Button::update()
 		curr = over;
 	else if (MouseOut())
 		curr = idle;
-	
-
-	ChangeButtonStats();
 
 	return true;
 }
@@ -1404,7 +1403,10 @@ void UI_Text_Input::Set(iPoint pos, int w, _TTF_Font* font, uint r, uint g, uint
 	camera_before.x = App->render->camera.x;
 	camera_before.y = App->render->camera.y;
 
-	color.r = color.g = color.b = color.a = 255;
+	color.r = r;
+	color.g = g;
+	color.b = b; 
+	color.a = 255;
 
 	text_offset = 0;
 }
@@ -2181,7 +2183,7 @@ bool UI_Check_Box::cleanup()
 	return true;
 }
 
-void UI_Check_Box::AddBox(iPoint pos, int size_w, int size_h, char * name)
+void UI_Check_Box::AddBox(iPoint pos, int size_w, int size_h, const char * name)
 {
 	check_box* cb = new check_box(pos, size_w, size_h);
 	cb->button->layer = layer + 1;
@@ -2251,6 +2253,16 @@ void UI_Check_Box::SetBox(bool set, int _i)
 				check_box_list.at(i)->checked = false;
 		}
 	}
+}
+
+void UI_Check_Box::SetPressed(SDL_Rect rect)
+{
+	pressed = rect;
+}
+
+void UI_Check_Box::SetIdle(SDL_Rect rect)
+{
+	idle = rect;
 }
 
 void UI_Check_Box::CheckControl()

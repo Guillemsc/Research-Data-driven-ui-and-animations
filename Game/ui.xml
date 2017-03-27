@@ -1,38 +1,124 @@
 <?xml version="1.0"?>
 <file>
      <scene name = "menu_scene">
-         <Window name = "main_window" position_x = "100" position_y = "100" size_w = "600" size_h = "600" blit_layer = "1" dinamic = "true" is_ui ="true">
+         <Window name = "main_window" position_x = "700" position_y = "200" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">
            
-               <Element type = "Image" name ="image" position_x ="300" position_y ="50" rect_x ="0" rect_y =" 0" rect_w ="225" rect_h ="219" dinamic ="false"/>
+               <Element type = "Image" name ="image" position_x ="700" position_y ="200" rect_x ="0" rect_y =" 0" rect_w ="225" rect_h ="219" dinamic ="false"/>
            
-               <Element type ="Text" name ="text" position_x ="313" position_y = "64" font ="3" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
+               <Element type ="Text" name ="text" position_x ="713" position_y = "212" font ="3" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
                     <var text = "SUPER AWESOME GAME"/>
                </Element>
            
-               <Element type ="Button" name ="button" position_x = "317" position_y = "100" size_w = "194" size_h = "49" dinamic = "false">
+               <Element type ="Button" name ="button" position_x = "717" position_y = "250" size_w = "194" size_h = "49" dinamic = "false">
                     <var add_image ="over" rect_x ="0" rect_y ="219" rect_w ="190" rect_h ="49"/>
                     <var add_image ="pressed" rect_x ="196" rect_y ="219" rect_w ="194" rect_h ="49"/>
                     <var add_image ="idle" rect_x ="395" rect_y ="219" rect_w ="190" rect_h ="49"/>
                </Element> 
          
-               <Element type ="Text" name ="text" position_x ="354" position_y = "115" font ="2" spacing ="0" color_r ="168" color_g ="134" color_b ="0">
+               <Element type ="Text" name ="text" position_x ="754" position_y = "265" font ="2" spacing ="0" color_r ="168" color_g ="134" color_b ="0">
                     <var text = "Start Game"/>
                     <var click_through ="true"/>
                </Element>
+         
+               <Element type ="Button" name ="button" position_x = "717" position_y = "310" size_w = "194" size_h = "37" dinamic = "false">
+                    <var add_image ="idle" rect_x ="0" rect_y ="268" rect_w ="190" rect_h ="36"/>
+                    <var add_image ="pressed" rect_x ="196" rect_y ="268" rect_w ="194" rect_h ="36"/>
+                    <var add_image ="over" rect_x ="395" rect_y ="268" rect_w ="190" rect_h ="36"/>
+               </Element> 
+                
+               <Element type ="Text" name ="text" position_x ="775" position_y = "318" font ="2" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
+                    <var text = "OPTIONS"/>
+                    <var click_through ="true"/>
+               </Element>
+         
+               <Element type ="Button" name ="button" position_x = "717" position_y = "360" size_w = "194" size_h = "37" dinamic = "false">
+                    <var add_image ="idle" rect_x ="0" rect_y ="268" rect_w ="190" rect_h ="36"/>
+                    <var add_image ="pressed" rect_x ="196" rect_y ="268" rect_w ="194" rect_h ="36"/>
+                    <var add_image ="over" rect_x ="395" rect_y ="268" rect_w ="190" rect_h ="36"/>
+               </Element> 
+         
+               <Element type ="Text" name ="text" position_x ="775" position_y = "368" font ="2" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
+                    <var text = "CREDITS"/>
+                    <var click_through ="true"/>
+               </Element>
+            
          </Window>
+         
+         <Window name = "main_window" position_x = "400" position_y = "130" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">
+         
+               <Element type = "Image" name ="image" position_x ="400" position_y ="130" rect_x ="0" rect_y =" 304" rect_w ="225" rect_h ="340" dinamic ="false"/> 
+           
+               <Element type ="Text" name ="text" position_x ="415" position_y = "156" font ="4" spacing ="0" color_r ="153" color_g ="153" color_b ="153">
+                    <var text = "name"/>
+               </Element>
+           
+               <Element type = "Image" name ="image" position_x ="465" position_y ="150" rect_x ="0" rect_y =" 722" rect_w ="145" rect_h ="28" dinamic ="false"/> 
+                
+               <Element type = "TextInput" name = "text_input" position_x = "473" position_y = "156" size_w = "133" font = "4" color_r ="153" color_g ="153" color_b ="153" dinamic = "false"/>
+              
+                <Element type ="Text" name ="text" position_x ="415" position_y = "200" font ="4" spacing ="0" color_r ="153" color_g ="153" color_b ="153">
+                    <var text = "cool?"/>
+               </Element>
+             
+               <Element type = "CheckBox" position_x = "470" position_y = "190" size_w = "50" size_h = "50" multiple_choices = "false" dinamic = "false"> 
+                    <var add_image = "idle" rect_x ="37" rect_y ="778" rect_w ="36" rect_h ="36"/>
+                    <var add_image = "pressed" rect_x ="0" rect_y ="778" rect_w ="36" rect_h ="36"/>
+                    <var add_box = "name" position_x = "470" position_y = "190" size_w = "36" size_h = "36"/>
+               </Element>
+                
+               <Element type ="Text" name ="text" position_x ="513" position_y = "200" font ="4" spacing ="0" color_r ="153" color_g ="153" color_b ="153">
+                    <var text = "yes"/>
+               </Element>
+           
+               <Element type ="Text" name ="text" position_x ="415" position_y = "250" font ="4" spacing ="0" color_r ="153" color_g ="153" color_b ="153">
+                    <var text = "how cool?"/>
+               </Element>
+                
+               <Element type ="Button" name ="button_add" position_x = "510" position_y = "280" size_w = "36" size_h = "36" dinamic = "false">
+                    <var add_image ="over" rect_x ="0" rect_y ="644" rect_w ="36" rect_h ="36"/>
+                    <var add_image ="pressed" rect_x ="0" rect_y ="644" rect_w ="36" rect_h ="36"/>
+                    <var add_image ="idle" rect_x ="0" rect_y ="644" rect_w ="36" rect_h ="36"/>
+               </Element> 
+           
+               <Element type ="Button" name ="button_minus" position_x = "415" position_y = "280" size_w = "36" size_h = "36" dinamic = "false">
+                    <var add_image ="over" rect_x ="0" rect_y ="680" rect_w ="36" rect_h ="36"/>
+                    <var add_image ="pressed" rect_x ="0" rect_y ="680" rect_w ="36" rect_h ="36"/>
+                    <var add_image ="idle" rect_x ="0" rect_y ="680" rect_w ="36" rect_h ="36"/>
+               </Element> 
+           
+               <Element type = "Image" name ="image" position_x ="458" position_y ="284" rect_x ="0" rect_y =" 750" rect_w ="45" rect_h ="28" dinamic ="false"/> 
+           
+               <Element type ="Text" name ="text_percent" position_x ="473" position_y = "290" font ="4" spacing ="0" color_r ="153" color_g ="153" color_b ="153">
+                    <var text = "0"/>
+                    <new_var start_value ="0" name ="percentage" max_value ="100" min_value ="0"/>
+               </Element>
+         </Window>
+       
+         <Action>
+               <act name ="button_add" left_pressed ="true">
+                     <act name ="percentage" add ="10"/>
+                     <act name ="percentage" set_to ="text_percent"/>
+               </act>
+               <act name ="button_minus" left_pressed ="true">
+                     <act name ="percentage" substract ="10"/>
+                     <act name ="percentage" set_to ="text_percent"/>
+           </act>
+         </Action>
+     
      </scene>
 </file>
 
  <!--
+
 ......... UI Elements .........
 
  <Window name ="main_window" position_x = "10" position_y = "10" size_w = "300" size_h = "300" blit_layer = "1" dinamic = "true" is_ui ="true">
  </Window>
  
  <Element type ="Button" name ="button" position_x = "300" position_y = "100" size_w = "100" size_h = "40" dinamic = "false">
-       <var add_image ="idle" rect_x ="0" rect.y ="0" rect.w ="0" rect.h ="0"/>
-       <var add_image ="pressed" rect_x ="0" rect.y ="0" rect.w ="0" rect.h ="0"/>
-       <var add_image ="over" rect_x ="0" rect.y ="0" rect.w ="0" rect.h ="0"/>
+       <var add_image ="idle" rect_x ="0" rect_y ="0" rect_w ="0" rect_h ="0"/>
+       <var add_image ="pressed" rect_x ="0" rect_y ="0" rect_w ="0" rect_h ="0"/>
+       <var add_image ="over" rect_x ="0" rect_y ="0" rect_w ="0" rect_h ="0"/>
 </Element> 
  
  <Element type ="Text" name ="text" position_x ="300" position_y = "100" font ="1" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
@@ -50,6 +136,13 @@
  </Element>
  
  <Element type = "ColoredRect" position_x = "10" position_y = "10" size_w = "300" size_h = "300" color_r = "255" color_g = "255" color_b = "255" bool filled = "false" dinamic = "false"/>
+ 
+ <Element type = "CheckBox" position_x = "10" position_y = "10" size_w = "300" size_h = "300" multiple_choices = "false" dinamic = "false"> 
+       <var add_image = "idle" rect_x ="0" rect_y ="0" rect_w ="0" rect.h ="0"/>
+       <var add_image = "pressed" rect_x ="0" rect_y ="0" rect_w ="0" rect_h ="0"/>
+       <var add_box = "name" position_x = "10" position_y = "10" size_w = "300" size_h = "300"/>
+ </Element>
+
 
 ......... General vars .........
 
@@ -58,4 +151,17 @@
 <var enabled ="true"/>
 <var is_ui ="true"/>
 
+
+......... Var creation .........
+
+ <new_var start_value ="0" name ="percentage" max_value ="100" min_value ="0"/>
+ 
+ 
+......... Actions .........
+<Action>
+    <act name ="button_plus" left_pressed ="true">
+         <act name ="percentage" add ="10"/>
+         <act name ="percentage" set_to ="text_percent"/>
+    </act>
+</Action>
 -->
