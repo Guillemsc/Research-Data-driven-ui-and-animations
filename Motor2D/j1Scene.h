@@ -40,6 +40,7 @@ public:
 	// Change scene
 	void ChangeScene(Scene* new_scene);
 	Scene* GetCurrentScene();
+	Scene* GetSceneByName(const char* name);
 
 	void OnCommand(std::list<std::string>& tokens);
 

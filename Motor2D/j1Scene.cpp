@@ -10,6 +10,7 @@
 #include "j1Console.h"
 #include "MenuScene.h"
 #include "SecondScene.h"
+#include "Functions.h"
 
 #define NUMBER_OF_PLAYERS 4
 
@@ -42,8 +43,8 @@ bool j1Scene::Start()
 	LOG("Start module scene");
 
 	// Creating scenes
-	menu_scene = new MenuScene();
-	second_scene = new SecondScene();
+	menu_scene = new MenuScene();		scenes.push_back(menu_scene);
+	second_scene = new SecondScene();	scenes.push_back(second_scene);
 	// -------------
 
 	// Starting scene
@@ -96,11 +97,16 @@ bool j1Scene::PostUpdate()
 // Called before quitting
 bool j1Scene::CleanUp()
 {
-	LOG("Freeing scene");
+	LOG("Freeing scenes");
 
 	bool ret = false;
 	if (current_scene != nullptr)
 		ret = current_scene->CleanUp();
+
+	for (list<Scene*>::iterator it = scenes.begin(); it != scenes.end(); ++it)
+	{
+		RELEASE(*it);
+	}
 
 	return ret;
 }
@@ -118,6 +124,22 @@ void j1Scene::ChangeScene(Scene * new_scene)
 Scene * j1Scene::GetCurrentScene()
 {
 	return current_scene;
+}
+
+Scene * j1Scene::GetSceneByName(const char * name)
+{
+	Scene* ret = nullptr;
+
+	for (list<Scene*>::iterator it = scenes.begin(); it != scenes.end(); it++)
+	{
+		if (TextCmp((*it)->GetName(), name))
+		{
+			ret = *it;
+			break;
+		}
+	}
+
+	return ret;
 }
 
 void j1Scene::OnCommand(std::list<std::string>& tokens)

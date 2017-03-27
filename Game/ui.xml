@@ -9,7 +9,7 @@
                     <var text = "SUPER AWESOME GAME"/>
                </Element>
            
-               <Element type ="Button" name ="button" position_x = "717" position_y = "250" size_w = "194" size_h = "49" dinamic = "false">
+               <Element type ="Button" name ="button_start" position_x = "717" position_y = "250" size_w = "194" size_h = "49" dinamic = "false">
                     <var add_image ="over" rect_x ="0" rect_y ="219" rect_w ="190" rect_h ="49"/>
                     <var add_image ="pressed" rect_x ="196" rect_y ="219" rect_w ="194" rect_h ="49"/>
                     <var add_image ="idle" rect_x ="395" rect_y ="219" rect_w ="190" rect_h ="49"/>
@@ -20,7 +20,7 @@
                     <var click_through ="true"/>
                </Element>
          
-               <Element type ="Button" name ="button" position_x = "717" position_y = "310" size_w = "194" size_h = "37" dinamic = "false">
+               <Element type ="Button" name ="button_options" position_x = "717" position_y = "310" size_w = "194" size_h = "37" dinamic = "false">
                     <var add_image ="idle" rect_x ="0" rect_y ="268" rect_w ="190" rect_h ="36"/>
                     <var add_image ="pressed" rect_x ="196" rect_y ="268" rect_w ="194" rect_h ="36"/>
                     <var add_image ="over" rect_x ="395" rect_y ="268" rect_w ="190" rect_h ="36"/>
@@ -31,7 +31,7 @@
                     <var click_through ="true"/>
                </Element>
          
-               <Element type ="Button" name ="button" position_x = "717" position_y = "360" size_w = "194" size_h = "37" dinamic = "false">
+               <Element type ="Button" name ="button_credits" position_x = "717" position_y = "360" size_w = "194" size_h = "37" dinamic = "false">
                     <var add_image ="idle" rect_x ="0" rect_y ="268" rect_w ="190" rect_h ="36"/>
                     <var add_image ="pressed" rect_x ="196" rect_y ="268" rect_w ="194" rect_h ="36"/>
                     <var add_image ="over" rect_x ="395" rect_y ="268" rect_w ="190" rect_h ="36"/>
@@ -44,7 +44,7 @@
             
          </Window>
          
-         <Window name = "main_window" position_x = "400" position_y = "130" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">
+         <Window name = "options_window" position_x = "400" position_y = "130" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">
          
                <Element type = "Image" name ="image" position_x ="400" position_y ="130" rect_x ="0" rect_y =" 304" rect_w ="225" rect_h ="340" dinamic ="false"/> 
            
@@ -95,6 +95,12 @@
          </Window>
        
          <Action>
+                <act name ="button_start" left_pressed ="true">
+                     <act load_scene ="second_scene"/>
+               </act>
+               <act name ="button_options" left_pressed ="true">
+                     <act name ="options_window" enabled ="-1"/>  <!-- 1 to enable, 0 to disable, -1 to enable if disabled and disable if enabled -->
+               </act>
                <act name ="button_add" left_pressed ="true">
                      <act name ="percentage" add ="10"/>
                      <act name ="percentage" set_to ="text_percent"/>
@@ -102,7 +108,7 @@
                <act name ="button_minus" left_pressed ="true">
                      <act name ="percentage" substract ="10"/>
                      <act name ="percentage" set_to ="text_percent"/>
-           </act>
+               </act>
          </Action>
      
      </scene>
@@ -164,4 +170,5 @@
          <act name ="percentage" set_to ="text_percent"/>
     </act>
 </Action>
+
 -->

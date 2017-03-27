@@ -485,6 +485,10 @@ void j1Gui::EraseFromElementsList(UI_Element * to_del)
 
 			if (element->parent_element != nullptr && element->parent_element->childs.size() > 0)
 				element->parent_element->childs.remove(element);
+
+			if (element->type == ui_window && windows.size() > 0)
+				windows.remove((UI_Window*)element);
+			
 		}
 	}
 

@@ -44,6 +44,7 @@ bool DataDrivenUI::Update(float dt)
 		current_scene = App->scene->GetCurrentScene();
 	}
 
+	// Perform code created by XML
 	PerformActions();
 
 	return ret;
@@ -180,6 +181,9 @@ void DataDrivenUI::CheckForElements(pugi::xml_node window_node, DDUI_Scene * sce
 {
 	for (pugi::xml_node element_node = window_node.child("Element"); element_node; element_node = element_node.next_sibling("Element"))
 	{
+		// -------------------------------------------------------- //
+		// Add here all the possible variables for all the Elements //
+		// -------------------------------------------------------- //
 		if (TextCmp(element_node.attribute("type").as_string(""), "Button"))
 		{
 			added_elements.push_back(AddButton(element_node, scene, curr_win));
@@ -213,6 +217,10 @@ void DataDrivenUI::CheckForElements(pugi::xml_node window_node, DDUI_Scene * sce
 
 void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scene)
 {
+
+	// --------------------------------------------------- //
+	// Add here all the possible actions for every Element //
+	// --------------------------------------------------- //
 	for (pugi::xml_node act_node = action_node.child("act"); act_node; act_node = act_node.next_sibling("act"))
 	{
 		string name = act_node.attribute("name").as_string("");
@@ -220,7 +228,7 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 		// Find Element
 		UI_Element* element = GetElementByName(name.c_str());
 
-		if (element != nullptr)
+		if (element != nullptr && element->type != ui_element::ui_element_null)
 		{
 			// Button
 			if (element->type == ui_element::ui_button)
@@ -245,40 +253,58 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 			// CheckBox
 			else if (element->type == ui_element::ui_check_box)
 			{
-				LOG("");
+
 			}
 			// Colored rect
 			else if (element->type == ui_element::ui_colored_rect)
 			{
-				LOG("");
+
 			}
 			// Image
 			else if (element->type == ui_element::ui_image)
 			{
-				LOG("");
+	
 			}
 			// Scroll Bar
 			else if (element->type == ui_element::ui_scroll_bar)
 			{
-				LOG("");
+
 			}
 			// Text
 			else if (element->type == ui_element::ui_text)
 			{
-				LOG("");
+
 			}
 			// Text Input
 			else if (element->type == ui_element::ui_text_input)
 			{
-				LOG("");
+
 			}
 			// Window
 			else if (element->type == ui_element::ui_window)
 			{
-				LOG("");
+			
+			}
+
+			// General Actions for Elements
+			if (TextCmp(act_node.attribute("enabled").name(), "enabled"))
+			{
+				int enabled = act_node.attribute("enabled").as_int(-1);
+
+				if (enabled == 0 || enabled == 1)
+				{
+					element->SetEnabledAndChilds(enabled);
+				}
+				else
+				{
+					element->SetEnabledAndChilds(!element->enabled);
+				}
 			}
 		}
 
+		// ---------------------------------------------------- //
+		// Add here all the possible actions for every variable //
+		// ---------------------------------------------------- //
 		// Find variable
 		else
 		{
@@ -311,6 +337,23 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 				}
 			}
 		}
+
+		// --------------------------------------------------------------------------- //
+		// Add here all the actions that don't deppend from variables neither Elements //
+		// --------------------------------------------------------------------------- //
+		if (TextCmp(act_node.attribute("load_scene").name(), "load_scene"))
+		{
+			string scene_name = act_node.attribute("load_scene").as_string("");
+
+			Scene* new_scene = App->scene->GetSceneByName(scene_name.c_str());
+
+			if (new_scene != nullptr)
+			{
+				App->scene->ChangeScene(new_scene);
+				break;
+			}
+		}
+		
 	}
 }
 
@@ -672,6 +715,12 @@ void DDUI_Scene::DeleteElements()
 
 		RELEASE(*it);
 		it = elements.erase(it);
+	}
+
+	for (vector<DDUI_Variable*>::iterator it = variables.begin(); it != variables.end();)
+	{
+		RELEASE(*it);
+		it = variables.erase(it);
 	}
 
 	elements.clear();
