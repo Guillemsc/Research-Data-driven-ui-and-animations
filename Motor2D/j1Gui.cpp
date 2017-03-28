@@ -688,6 +688,23 @@ void UI_Element::SetPos(iPoint newpos)
 	}
 }
 
+void UI_Element::fSetPos(fPoint newpos)
+{
+	list<UI_Element*> childs;
+	App->gui->GetChilds(this, childs);
+
+	iPoint distance((int)newpos.x - GetPos().x, (int)newpos.y - GetPos().y);
+
+	if (!childs.empty())
+	{
+		for (list<UI_Element*>::iterator it = childs.begin(); it != childs.end(); it++)
+		{
+			(*it)->rect.x += distance.x;
+			(*it)->rect.y += distance.y;
+		}
+	}
+}
+
 // ---------------------------------------------------------------------
 // Detects the highest layer of a clicked point.
 // ---------------------------------------------------------------------

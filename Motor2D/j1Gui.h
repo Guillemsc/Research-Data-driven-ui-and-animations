@@ -153,7 +153,8 @@ public:
 	bool PutWindowToTop();
 
 	iPoint GetPos();
-	void SetPos(iPoint);
+	void SetPos(iPoint new_pos);
+	void fSetPos(fPoint new_pos);
 
 protected:
 

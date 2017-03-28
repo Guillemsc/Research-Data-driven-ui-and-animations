@@ -35,7 +35,7 @@ bool MenuScene::Update(float dt)
 	{
 		App->scene->ChangeScene((Scene*)App->scene->second_scene);
 	}
-
+	
 	return ret;
 }
 

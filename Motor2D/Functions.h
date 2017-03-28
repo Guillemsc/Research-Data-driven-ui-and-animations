@@ -29,4 +29,9 @@ void Tokenize(std::string string, const char separator, std::list<std::string>& 
 //Puts al chars to lower case
 void ToLowerCase(std::string str);
 
+fPoint Bezier(float curr_time, float end_time, vector<fPoint>& points);
+
+float getPt(float n1, float n2, float perc);
+fPoint Bezier2(float curr_time, float end_time, vector<fPoint>& points);
+
 #endif //__FUNCTIONS_H__

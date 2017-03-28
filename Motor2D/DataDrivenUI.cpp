@@ -202,6 +202,8 @@ void DataDrivenUI::PerformActions()
 		{
 			CheckForActions(action_node, scene);
 		}
+
+		scene->UpdateAnimations();
 	}
 }
 
@@ -540,6 +542,11 @@ UI_Image * DataDrivenUI::AddImage(pugi::xml_node element_node, DDUI_Scene * scen
 
 	AddVars(element_node, scene);
 
+	// Test
+	DDUI_A_Movement* m1 = new DDUI_A_Movement("hi", ddui_anim_type::ddui_anim_movement, image, iPoint(300, image->GetPos().y), 10, a_move_type::a_ease_in_ease_out);
+	scene->AddAnimation(m1);
+	// -----
+
 	return image;
 }
 
@@ -704,6 +711,14 @@ void DDUI_Scene::AddVariable(DDUI_Variable * var)
 void DDUI_Scene::AddAnimation(DDUI_Animation * anim)
 {
 	animations.push_back(anim);
+}
+
+void DDUI_Scene::UpdateAnimations()
+{
+	for (int i = 0; i < animations.size(); i++)
+	{
+		animations.at(i)->update();
+	}
 }
 
 DDUI_Element* DDUI_Scene::FindElement(const char * name)
@@ -877,9 +892,9 @@ const char * DDUI_Animation::GetName()
 	return name.c_str();
 }
 
-UI_Element * DDUI_Animation::GetTarget()
+UI_Element * DDUI_Animation::GetElement()
 {
-	return target;
+	return element;
 }
 
 ddui_anim_type DDUI_Animation::GetType()
@@ -889,15 +904,54 @@ ddui_anim_type DDUI_Animation::GetType()
 
 bool DDUI_A_Movement::update()
 {
-	return false;
+	if (stop)
+		return true;
+
+	if (first_time)
+	{
+		timer.Start();
+		first_time = false;
+	}
+
+	float destance_between_ends = abs(DistanceFromTwoPoints(starting_pos.x, starting_pos.y, destination.x, destination.y));
+
+	App->render->DrawCircle(destination.x, destination.y, 5, 255, 255, 255);
+	App->render->DrawCircle(GetElement()->GetPos().x, GetElement()->GetPos().y, 5, 255, 255, 255);
+	App->render->DrawCircle(starting_pos.x, starting_pos.y, 5, 255, 255, 255);
+	App->render->DrawLine(starting_pos.x, starting_pos.y, destination.x, destination.y, 255, 255, 255);
+
+	vector<fPoint> points;
+
+	points.push_back(fPoint(0, 0));
+	switch (movement_type)
+	{
+	case a_move_linear:
+		break;
+	case a_ease_in_ease_out:
+		points.push_back(fPoint(0.1, 0.0));
+		points.push_back(fPoint(0.0, 1.00));
+		break;
+	}
+	points.push_back(fPoint(1, 1));
+
+	float bezier = Bezier(timer.ReadSec(), time, points).y;
+
+	float new_distance = (destance_between_ends*bezier);
+
+	GetElement()->fSetPos(fPoint(starting_pos.x + (new_distance * cos(angle*DEGTORAD)), starting_pos.y + (new_distance * sin(angle*DEGTORAD))));
+
+	if (timer.ReadSec() > time)
+		stop = true;
+
+	return true;
 }
 
-float DDUI_A_Movement::GetSpeed()
+float DDUI_A_Movement::GetTime()
 {
-	return speed;
+	return time;
 }
 
-iPoint DDUI_A_Movement::GetTarget()
+iPoint DDUI_A_Movement::GetDestination()
 {
-	return target;
+	return destination;
 }

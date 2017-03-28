@@ -3,6 +3,8 @@
 
 #include "j1Module.h"
 #include "j1Render.h"
+#include "j1Gui.h"
+#include "Functions.h"
 
 class Scene;
 class DDUI_Scene;
@@ -10,14 +12,7 @@ class DDUI_Element;
 class DDUI_Variable;
 class DDUI_Animation;
 class DDUI_A_Movement;
-class UI_Element;
-class UI_Window;
-class UI_Button;
-class UI_Text;
-class UI_Image;
-class UI_Text_Input;
-class UI_Scroll_Bar;
-class UI_Check_Box;
+
 
 class DataDrivenUI : public j1Module
 {
@@ -105,6 +100,8 @@ public:
 
 	// Adds an anition to the scene
 	void AddAnimation(DDUI_Animation* anim);
+
+	void UpdateAnimations();
 
 	// Finds an element stored on the scene given a name set on the XML
 	DDUI_Element* FindElement(const char* name);
@@ -201,12 +198,12 @@ enum ddui_anim_type
 class DDUI_Animation
 {
 public:
-	DDUI_Animation(const char* name, ddui_anim_type type, UI_Element* target = nullptr) : type(type), name(name), target(target) {};
+	DDUI_Animation(const char* name, ddui_anim_type type, UI_Element* element = nullptr) : type(type), name(name), element(element) {};
 	virtual ~DDUI_Animation() {};
 	virtual bool update() { return true; }
 
 	const char* GetName();
-	UI_Element* GetTarget();
+	UI_Element* GetElement();
 	ddui_anim_type GetType();
 private:
 
@@ -214,7 +211,7 @@ public:
 
 private:
 	string         name;
-	UI_Element*    target = nullptr;
+	UI_Element*    element = nullptr;
 	ddui_anim_type type = ddui_anim_null;
 };
 
@@ -225,24 +222,38 @@ enum a_move_type
 {
 	a_move_null,
 	a_move_linear,
+	a_ease_in_ease_out,
 	a_move_test,
 };
 
 class DDUI_A_Movement : public DDUI_Animation
 {
 public:
-	DDUI_A_Movement(const char* name, ddui_anim_type type, UI_Element* target, iPoint destination, float speed, a_move_type movement_type) 
-		: destination(destination), speed(speed), movement_type(movement_type), DDUI_Animation(name, type, target) {};
+	DDUI_A_Movement(const char* name, ddui_anim_type type, UI_Element* target, iPoint destination, float time, a_move_type movement_type) 
+		: destination(destination), time(time), movement_type(movement_type), DDUI_Animation(name, type, target) 
+	{
+		starting_pos = target->GetPos();
+		angle = AngleFromTwoPoints(GetElement()->GetPos().x, GetElement()->GetPos().y, destination.x, destination.y);
+		first_time = true;
+	};
 
 	virtual ~DDUI_A_Movement() {};
 	bool update();
 
-	float GetSpeed();
-	iPoint GetTarget();
+	float GetTime();
+	iPoint GetDestination();
+
 private:
-	float       speed = 0.0f;
+
+private:
+	float       time = 0.0f;
 	iPoint      destination = NULLPOINT;
+	iPoint		starting_pos = NULLPOINT;
 	a_move_type movement_type = a_move_null;
+	j1Timer     timer;
+	float		angle = 0.0f;
+	bool		stop = false;
+	bool		first_time = true;
 };
 
 // ---------------------------
