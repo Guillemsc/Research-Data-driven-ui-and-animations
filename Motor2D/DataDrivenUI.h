@@ -242,6 +242,7 @@ public:
 
 	float GetTime();
 	iPoint GetDestination();
+	float BezierXAsTime(float curr_time, float end_time, vector<fPoint> points);
 
 private:
 
@@ -254,6 +255,8 @@ private:
 	float		angle = 0.0f;
 	bool		stop = false;
 	bool		first_time = true;
+
+	iPoint      test_pos = NULLPOINT;
 };
 
 // ---------------------------

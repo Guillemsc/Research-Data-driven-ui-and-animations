@@ -61,13 +61,11 @@ void ToLowerCase(std::string str)
 	}
 }
 
-fPoint Bezier(float curr_time, float end_time, vector<fPoint>& points)
+fPoint Bezier(float curr_time, float end_time, vector<fPoint> points)
 {
 	fPoint ret = NULLPOINT;
 
 	float rel_time = curr_time / end_time;
-
-	LOG("%f", rel_time);
 	
 	int i = points.size() - 1;
 
@@ -85,48 +83,10 @@ fPoint Bezier(float curr_time, float end_time, vector<fPoint>& points)
 	return ret;
 }
 
-float getPt(float n1, float n2, float perc)
+int OneDBezier(float curr_time, float end_time, vector<fPoint> points)
 {
-	float diff = n2 - n1;
-
-	return n1 + (diff * perc);
+	float x = Bezier(curr_time, end_time, points).x;
+	return Bezier(x, 1, points).y;
 }
 
-fPoint Bezier2(float curr_time, float end_time, vector<fPoint>& points)
-{
-	fPoint ret = NULLPOINT;
-
-	float rel_time = curr_time / end_time;
-
-	float x1 = points.at(0).x;
-	float y1 = points.at(0).y;
-
-	float x2 = points.at(1).x;
-	float y2 = points.at(1).y;
-
-	float x3 = points.at(2).x;
-	float y3 = points.at(2).y;
-
-	float x4 = points.at(3).x;
-	float y4 = points.at(3).y;
-
-	float xa = getPt(x1, x2, rel_time);
-	float ya = getPt(y1, y2, rel_time);
-	float xb = getPt(x2, x3, rel_time);
-	float yb = getPt(y2, y3, rel_time);
-	float xc = getPt(x3, x4, rel_time);
-	float yc = getPt(y3, y4, rel_time);
-
-	// The Blue Line
-	float xm = getPt(xa, xb, rel_time);
-	float ym = getPt(ya, yb, rel_time);
-	float xn = getPt(xb, xc, rel_time);
-	float yn = getPt(yb, yc, rel_time);
-
-	// The Black Dot
-	ret.x = getPt(xm, xn, rel_time);
-	ret.y = getPt(ym, yn, rel_time);
-
-	return ret;
-}
 

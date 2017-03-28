@@ -911,6 +911,7 @@ bool DDUI_A_Movement::update()
 	{
 		timer.Start();
 		first_time = false;
+		test_pos = starting_pos;
 	}
 
 	float destance_between_ends = abs(DistanceFromTwoPoints(starting_pos.x, starting_pos.y, destination.x, destination.y));
@@ -928,8 +929,8 @@ bool DDUI_A_Movement::update()
 	case a_move_linear:
 		break;
 	case a_ease_in_ease_out:
-		points.push_back(fPoint(0.1, 0.0));
-		points.push_back(fPoint(0.0, 1.00));
+		points.push_back(fPoint(1.00f, 0.00f));
+		points.push_back(fPoint(0.00f, 1.00f));
 		break;
 	}
 	points.push_back(fPoint(1, 1));
@@ -943,6 +944,23 @@ bool DDUI_A_Movement::update()
 	if (timer.ReadSec() > time)
 		stop = true;
 
+	if (App->debug_mode)
+	{
+		for (float i = 0; i < 1; i += 0.01f)
+		{
+			float b = Bezier(i, 1, points).y;
+			test_pos = iPoint(starting_pos.x + (Bezier(i, 1, points).x * 100), starting_pos.y - (Bezier(i, 1, points).y * 100));
+			App->render->DrawCircle(test_pos.x, test_pos.y, 1, 255, 255, 255);
+		}
+		test_pos = starting_pos;
+		test_pos = iPoint(starting_pos.x + (Bezier(bezier, 1, points).x * 100), starting_pos.y - (Bezier(bezier, 1, points).y * 100));
+		App->render->DrawCircle(test_pos.x, test_pos.y, 2, 0, 255, 255);
+		App->render->DrawCircle(test_pos.x, starting_pos.y, 2, 0, 255, 255);
+		App->render->DrawCircle(starting_pos.x, test_pos.y, 2, 0, 255, 255);
+		App->render->DrawQuad({ starting_pos.x , starting_pos.y, 100, -100 }, 255, 255, 255, -1, 255, false);
+		test_pos = starting_pos;
+	}
+
 	return true;
 }
 
@@ -954,4 +972,9 @@ float DDUI_A_Movement::GetTime()
 iPoint DDUI_A_Movement::GetDestination()
 {
 	return destination;
+}
+
+float DDUI_A_Movement::BezierXAsTime(float curr_time, float end_time, vector<fPoint> points)
+{
+	return 0.0f;
 }
