@@ -36,16 +36,16 @@ bool DataDrivenUI::Update(float dt)
 {
 	bool ret = true;
 
+	// Perform code created by XML
+	PerformActions();
+
 	// Change UI when changing scene
 	if (current_scene != App->scene->GetCurrentScene())
 	{
-		LoadScene(App->scene->GetCurrentScene()->GetName());
 		UnloadScene(current_scene->GetName());
+		LoadScene(App->scene->GetCurrentScene()->GetName());
 		current_scene = App->scene->GetCurrentScene();
 	}
-
-	// Perform code created by XML
-	PerformActions();
 
 	return ret;
 }
@@ -143,17 +143,20 @@ DDUI_Scene * DataDrivenUI::GetScene(const char * name)
 void DataDrivenUI::UnloadScene(const char * name)
 {
 	// Get Scenes
-	for(vector<DDUI_Scene*>::iterator it = scenes.begin(); it!= scenes.end();)
+	if (!scenes.empty())
 	{
-		if (TextCmp((*it)->GetName(), name))
+		for (vector<DDUI_Scene*>::iterator it = scenes.begin(); it != scenes.end();)
 		{
-			(*it)->DeleteElements();
-			RELEASE(*it);
-			scenes.erase(it);
-			break;
+			if (TextCmp((*it)->GetName(), name))
+			{
+				(*it)->DeleteElements();
+				RELEASE(*it);
+				it = scenes.erase(it);
+				break;
+			}
+			else
+				++it;
 		}
-		else
-			++it;
 	}
 
 }
@@ -350,7 +353,6 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 			if (new_scene != nullptr)
 			{
 				App->scene->ChangeScene(new_scene);
-				break;
 			}
 		}
 		
@@ -708,22 +710,29 @@ DDUI_Variable * DDUI_Scene::FindVariable(const char * name)
 
 void DDUI_Scene::DeleteElements()
 {
-	for(vector<DDUI_Element*>::iterator it = elements.begin(); it != elements.end();)
+	if (!elements.empty())
 	{
-		if ((*it)->GetElement()->type == ui_window)
-			App->gui->DeleteElement((*it)->GetElement());
+		for (vector<DDUI_Element*>::iterator it = elements.begin(); it != elements.end();)
+		{
+			if ((*it)->GetElement()->type == ui_element::ui_window)
+				App->gui->DeleteElement((*it)->GetElement());
 
-		RELEASE(*it);
-		it = elements.erase(it);
+			RELEASE(*it);
+			it = elements.erase(it);
+		}
 	}
 
-	for (vector<DDUI_Variable*>::iterator it = variables.begin(); it != variables.end();)
+	if (!variables.empty())
 	{
-		RELEASE(*it);
-		it = variables.erase(it);
+		for (vector<DDUI_Variable*>::iterator it = variables.begin(); it != variables.end();)
+		{
+			RELEASE(*it);
+			it = variables.erase(it);
+		}
 	}
 
 	elements.clear();
+	variables.clear();
 }
 
 DDUI_Element::DDUI_Element(const char * _name, UI_Element* _element)

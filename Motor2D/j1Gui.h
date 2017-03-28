@@ -208,6 +208,7 @@ public:
 	~UI_Window();
 
 	bool update();
+	bool cleanup();
 
 	void Set(iPoint pos, int w, int h);
 
@@ -525,7 +526,7 @@ struct check_box
 		button->Set(pos, size_w, size_h);
 		checked = false;
 	};
-	~check_box() {};
+	~check_box() { };
 
 	bool        checked = false;
 	UI_Button*  button = nullptr;

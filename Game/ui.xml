@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <file>
      <scene name = "menu_scene">
          <Window name = "main_window" position_x = "700" position_y = "200" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">

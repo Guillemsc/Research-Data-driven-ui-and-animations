@@ -88,6 +88,8 @@ bool j1Scene::PostUpdate()
 	if (current_scene != nullptr)
 		ret = current_scene->PostUpdate();
 
+	DoChangeScene();
+
 	if(App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
@@ -115,10 +117,8 @@ void j1Scene::ChangeScene(Scene * new_scene)
 {
 	LOG("Changing current scene");
 
-	Scene* last_scene = current_scene;
-	current_scene = new_scene;
-	last_scene->CleanUp();
-	current_scene->Start();
+	current_scene->next_scene = new_scene;
+	current_scene->change_scene = true;
 }
 
 Scene * j1Scene::GetCurrentScene()
@@ -155,6 +155,18 @@ void j1Scene::OnCVar(std::list<std::string>& tokens)
 void j1Scene::SaveCVar(std::string & cvar_name, pugi::xml_node & node) const
 {
 	current_scene->SaveCVar(cvar_name,node);
+}
+
+void j1Scene::DoChangeScene()
+{
+	if (current_scene->change_scene)
+	{
+		current_scene->change_scene = false;
+		Scene* last_scene = current_scene;
+		current_scene = current_scene->next_scene;
+		last_scene->CleanUp();
+		current_scene->Start();
+	}
 }
 
 

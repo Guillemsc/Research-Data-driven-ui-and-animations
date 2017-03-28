@@ -229,26 +229,33 @@ void j1Gui::GetChilds(UI_Element * element, list<UI_Element*>& visited)
 	visited.push_back(element);
 
 	// Add the current childs
-	for (list<UI_Element*>::iterator it = element->childs.begin(); it != element->childs.end(); it++)
-		frontier.push_back(*it);
-
+	if (!element->childs.empty())
+	{
+		for (list<UI_Element*>::iterator it = element->childs.begin(); it != element->childs.end(); it++)
+			frontier.push_back(*it);
+	}
 
 	// Navigate through all the childs and add them
-
-	int end = 0;
-	while (!frontier.empty())
+	if (!frontier.empty())
 	{
-		for (list<UI_Element*>::iterator fr = frontier.begin(); fr != frontier.end();)
+		list<UI_Element*>::iterator fr = frontier.begin();
+
+		while (!frontier.empty())
 		{
 			list<UI_Element*>::iterator find = std::find(visited.begin(), visited.end(), *fr);
+
 			if (find == visited.end() && *fr != element)
 			{
 				visited.push_back(*fr);
-				for (list<UI_Element*>::iterator ch = (*fr)->childs.begin(); ch != (*fr)->childs.end(); ch++)
+				if (!(*fr)->childs.empty())
 				{
-					frontier.push_back(*ch);
+					for (list<UI_Element*>::iterator ch = (*fr)->childs.begin(); ch != (*fr)->childs.end(); ch++)
+					{
+						frontier.push_back(*ch);
+					}
 				}
 			}
+
 			fr = frontier.erase(fr);
 		}
 	}
@@ -289,8 +296,11 @@ void j1Gui::ReorderElements()
 	App->gui->elements_list.Clear();
 
 	// Place againt he elements on the PQ (now they are on the correct order)
-	for (list<UI_Element*>::iterator it = copy.begin(); it != copy.end(); it++)
-		App->gui->elements_list.Push(*it, (*it)->layer);
+	if (!copy.empty())
+	{
+		for (list<UI_Element*>::iterator it = copy.begin(); it != copy.end(); it++)
+			App->gui->elements_list.Push(*it, (*it)->layer);
+	}
 }
 
 // ---------------------------------------------------------------------
@@ -331,25 +341,37 @@ bool j1Gui::Move_Elements()
 
 		// ----------------------
 
+		if (to_move == nullptr)
+		{
+			moving = false;
+			return false;
+		}
+
 		// Get childs 
 		list<UI_Element*> visited;
 		App->gui->GetChilds(to_move, visited);
 
 		// Move all childs ------
-		for (list<UI_Element*>::iterator it = visited.begin(); it != visited.end(); it++)
+		if (!visited.empty())
 		{
-			if (curr_x != mouse_x)
-				(*it)->rect.x -= mouse_x - curr_x;
+			for (list<UI_Element*>::iterator it = visited.begin(); it != visited.end(); it++)
+			{
+				if (curr_x != mouse_x)
+					(*it)->rect.x -= mouse_x - curr_x;
 
-			if (curr_y != mouse_y)
-				(*it)->rect.y -= mouse_y - curr_y;
+				if (curr_y != mouse_y)
+					(*it)->rect.y -= mouse_y - curr_y;
+			}
 		}
 
 		// Update mouse stored in childs
-		for (list<UI_Element*>::iterator it = visited.begin(); it != visited.end(); it++)
+		if (!visited.empty())
 		{
-			(*it)->mouse_x = curr_x;
-			(*it)->mouse_y = curr_y;
+			for (list<UI_Element*>::iterator it = visited.begin(); it != visited.end(); it++)
+			{
+				(*it)->mouse_x = curr_x;
+				(*it)->mouse_y = curr_y;
+			}
 		}
 
 		// Update mouse stored in this element
@@ -417,12 +439,15 @@ UI_Element* j1Gui::CheckClickMove(int x, int y)
 
 			higher_element = nullptr;
 
-			for (list<UI_Element*>::iterator it = parents_list.begin(); it != parents_list.end(); it++)
+			if (!parents_list.empty())
 			{
-				if ((*it)->dinamic)
+				for (list<UI_Element*>::iterator it = parents_list.begin(); it != parents_list.end(); it++)
 				{
-					higher_element = *it;
-					break;
+					if ((*it)->dinamic)
+					{
+						higher_element = *it;
+						break;
+					}
 				}
 			}
 		}
@@ -442,29 +467,66 @@ void j1Gui::DeleteElement(UI_Element* element)
 	list<UI_Element*> childs;
 	App->gui->GetChilds(element, childs);
 
-	// Delete element and it's childs
-	for (list<UI_Element*>::iterator ch = childs.begin(); ch != childs.end();)
+	if (!childs.empty())
 	{
-		if (*ch == nullptr && (*ch)->parent->childs.size() > 0)
-			(*ch)->parent->childs.erase(ch);
+		list<UI_Element*>::iterator ch = childs.begin();
 
-		if ((*ch)->parent_element != nullptr && (*ch)->parent_element->childs.size() > 0)
-			(*ch)->parent_element->childs.erase(ch);
-
-		if ((*ch)->type == ui_window && windows.size() > 0)
+		while (!childs.empty())
 		{
-			windows.remove((UI_Window*)*ch);
+			if (*ch != nullptr)
+			{
+				// Delete from parent list
+				if ((*ch)->parent != nullptr && !(*ch)->parent->childs.empty())
+				{
+					for (list<UI_Element*>::iterator it = (*ch)->parent->childs.begin(); it != (*ch)->parent->childs.end();)
+					{
+						if (*ch == *it)
+						{
+							it = (*ch)->parent->childs.erase(it);
+						}
+						else
+							++it;
+					}
+				}
+
+				// Dekete from parent element list
+				if ((*ch)->parent_element != nullptr && !(*ch)->parent_element->childs.empty())
+				{
+					for (list<UI_Element*>::iterator it = (*ch)->parent_element->childs.begin(); it != (*ch)->parent_element->childs.end();)
+					{
+						if (*it == *ch)
+						{
+							it = (*ch)->parent_element->childs.erase(it);
+						}
+						else
+							++it;
+					}
+				}
+
+				// Delete from window list
+				if (!windows.empty())
+				{
+					for (list<UI_Window*>::iterator it = windows.begin(); it != windows.end();)
+					{
+						if (*it = (UI_Window*)*ch)
+						{
+							it = windows.erase(it);
+							break;
+						}
+						else
+							++it;
+					}
+				}
+
+				App->gui->EraseFromElementsList(*ch);
+
+				(*ch)->cleanup();
+				RELEASE((*ch));
+			}
+
+			ch = childs.erase(ch);
+
 		}
-
-		// Delete from pQ
-		list<UI_Element*> to_add;
-
-		App->gui->EraseFromElementsList(*ch);
-
-		(*ch)->cleanup();
-		RELEASE((*ch));
-
-		ch = childs.erase(ch);
 	}
 }
 
@@ -480,15 +542,51 @@ void j1Gui::EraseFromElementsList(UI_Element * to_del)
 			fill.push_back(element);
 		else
 		{
-			if (element == nullptr && element->parent->childs.size() > 0)
-				element->parent->childs.remove(element);
+			if (element == nullptr)
+				continue;
 
-			if (element->parent_element != nullptr && element->parent_element->childs.size() > 0)
-				element->parent_element->childs.remove(element);
+			// Delete from parent list
+			if (element->parent != nullptr && !element->parent->childs.empty())
+			{
+				for (list<UI_Element*>::iterator it = element->parent->childs.begin(); it != element->parent->childs.end();)
+				{
+					if (*it == element)
+					{
+						it = element->parent->childs.erase(it);
+					}
+					else
+						++it;
+				}
+			}
 
-			if (element->type == ui_window && windows.size() > 0)
-				windows.remove((UI_Window*)element);
-			
+			// Dekete from parent element list
+			if (element->parent_element != nullptr && !element->parent_element->childs.empty())
+			{
+				for (list<UI_Element*>::iterator it = element->parent_element->childs.begin(); it != element->parent_element->childs.end();)
+				{
+					if (*it == element)
+					{
+						it = element->parent_element->childs.erase(it);
+					}
+					else
+						++it;
+				}
+			}
+
+			// Delete from window list
+			if (!windows.empty())
+			{
+				for (list<UI_Window*>::iterator it = windows.begin(); it != windows.end();)
+				{
+					if (*it = (UI_Window*)element)
+					{
+						it = windows.erase(it);
+						break;
+					}
+					else
+						++it;
+				}
+			}
 		}
 	}
 
@@ -533,8 +631,11 @@ void UI_Element::SetEnabledAndChilds(bool set)
 	list<UI_Element*> visited;
 	App->gui->GetChilds(this, visited);
 
-	for (list<UI_Element*>::iterator it = visited.begin(); it != visited.end(); it++)
-		(*it)->enabled = set;
+	if (!visited.empty())
+	{
+		for (list<UI_Element*>::iterator it = visited.begin(); it != visited.end(); it++)
+			(*it)->enabled = set;
+	}
 }
 
 
@@ -553,8 +654,11 @@ bool UI_Element::PutWindowToTop()
 
 	// Update layer
 	int i = 0;
-	for (list<UI_Element*>::iterator it = visited.begin(); it != visited.end(); it++, i++)
-		(*it)->layer = App->gui->higher_layer + i + 1;
+	if (!visited.empty())
+	{
+		for (list<UI_Element*>::iterator it = visited.begin(); it != visited.end(); it++, i++)
+			(*it)->layer = App->gui->higher_layer + i + 1;
+	}
 
 	// Rorded the elements of the PQ
 	App->gui->ReorderElements();
@@ -574,10 +678,13 @@ void UI_Element::SetPos(iPoint newpos)
 
 	iPoint distance(newpos.x - GetPos().x, newpos.y - GetPos().y);
 
-	for (list<UI_Element*>::iterator it = childs.begin(); it != childs.end(); it++)
+	if (!childs.empty())
 	{
-		(*it)->rect.x += distance.x;
-		(*it)->rect.y += distance.y;
+		for (list<UI_Element*>::iterator it = childs.begin(); it != childs.end(); it++)
+		{
+			(*it)->rect.x += distance.x;
+			(*it)->rect.y += distance.y;
+		}
 	}
 }
 
@@ -716,6 +823,11 @@ bool UI_Window::update()
 		App->render->DrawQuad(rect, color.r, color.g, color.b, -1.0f, color.a, false);
 
 	return true;
+}
+
+bool UI_Window::cleanup()
+{
+	return false;
 }
 
 void UI_Window::Set(iPoint pos, int w, int h)
@@ -1161,12 +1273,15 @@ void UI_Button::AddImage(const char* name, SDL_Rect rect)
 
 void UI_Button::SetImage(char* name)
 {
-	for (list<rect_text>::iterator it = rect_list.begin(); it != rect_list.end(); it++)
+	if (!rect_list.empty())
 	{
-		if (TextCmp((*it).name.c_str(), name))
+		for (list<rect_text>::iterator it = rect_list.begin(); it != rect_list.end(); it++)
 		{
-			curr = (*it).rect;
-			break;
+			if (TextCmp((*it).name.c_str(), name))
+			{
+				curr = (*it).rect;
+				break;
+			}
 		}
 	}
 }
@@ -1220,8 +1335,14 @@ void UI_Text::Set(iPoint _pos, _TTF_Font* _font, int _spacing, uint r, uint g, u
 void UI_Text::SetText(string _text)
 {
 	// Clean last texts
-	for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
-		App->tex->UnLoadTexture((*it).texture);
+	if (!tex_str_list.empty())
+	{
+		if (!tex_str_list.empty())
+		{
+			for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
+				App->tex->UnLoadTexture((*it).texture);
+		}
+	}
 
 	tex_str_list.clear();
 
@@ -1253,10 +1374,13 @@ string UI_Text::GetText()
 	string ret;
 
 	int acumulated = 0;
-	for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
+	if (!tex_str_list.empty())
 	{
-		ret.insert(acumulated, (*it).text.c_str());
-		acumulated += (*it).text.size() + 1;
+		for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
+		{
+			ret.insert(acumulated, (*it).text.c_str());
+			acumulated += (*it).text.size() + 1;
+		}
 	}
 	ret[acumulated] = '\0';
 
@@ -1270,12 +1394,16 @@ bool UI_Text::update()
 
 	// Get highest w and add all h
 	int w = 0, h = 0;
-	for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
+
+	if (!tex_str_list.empty())
 	{
-		App->font->CalcSize((*it).text.c_str(), rect.w, rect.h, font);
-		h += rect.h;
-		if (rect.w > w)
-			w = rect.w;
+		for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
+		{
+			App->font->CalcSize((*it).text.c_str(), rect.w, rect.h, font);
+			h += rect.h;
+			if (rect.w > w)
+				w = rect.w;
+		}
 	}
 
 	rect.w = w;
@@ -1288,20 +1416,23 @@ bool UI_Text::update()
 	if (print)
 	{
 		int space = 0;
-		for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
+		if (!tex_str_list.empty())
 		{
-			if (!TextCmp((*it).text.c_str(), ""))
+			for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
 			{
-				if (!is_gameplay)
-					App->render->Blit((*it).texture, rect.x, rect.y + space);
-				else
+				if (!TextCmp((*it).text.c_str(), ""))
 				{
-					if (is_ui)
-						App->view->LayerBlit(LAYER, (*it).texture, iPoint(rect.x, rect.y + space), { 0, 0, rect.w, rect.h }, viewport, -1.0f, false);
+					if (!is_gameplay)
+						App->render->Blit((*it).texture, rect.x, rect.y + space);
 					else
-						App->view->LayerBlit(LAYER, (*it).texture, iPoint(rect.x, rect.y + space));
+					{
+						if (is_ui)
+							App->view->LayerBlit(LAYER, (*it).texture, iPoint(rect.x, rect.y + space), { 0, 0, rect.w, rect.h }, viewport, -1.0f, false);
+						else
+							App->view->LayerBlit(LAYER, (*it).texture, iPoint(rect.x, rect.y + space));
+					}
+					space += spacing;
 				}
-				space += spacing;
 			}
 		}
 	}
@@ -1311,8 +1442,11 @@ bool UI_Text::update()
 
 bool UI_Text::cleanup()
 {
-	for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
-		App->tex->UnLoadTexture((*it).texture);
+	if (!tex_str_list.empty())
+	{
+		for (list<tex_str>::iterator it = tex_str_list.begin(); it != tex_str_list.end(); it++)
+			App->tex->UnLoadTexture((*it).texture);
+	}
 
 	return true;
 }
@@ -1802,8 +1936,11 @@ bool UI_Scroll_Bar::update()
 	App->render->SetViewPort({ rect.x + App->render->camera.x, rect.y + App->render->camera.y, rect.w, rect.h });
 	//  rect.x + rect.w + App->render->camera.x
 
-	for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
-		(*it).element->update();
+	if (!elements.empty())
+	{
+		for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+			(*it).element->update();
+	}
 
 
 	App->render->ResetViewPort();
@@ -1846,16 +1983,19 @@ void UI_Scroll_Bar::AddElement(UI_Element * element)
 
 void UI_Scroll_Bar::DeleteScrollElement(UI_Element * element)
 {
-	for (list<scroll_element>::iterator it = elements.begin(); it != elements.end();)
+	if (!elements.empty())
 	{
-		if ((*it).element == element)
+		for (list<scroll_element>::iterator it = elements.begin(); it != elements.end();)
 		{
-			it = elements.erase(it);
-			App->gui->DeleteElement(element);
-			break;
+			if ((*it).element == element)
+			{
+				it = elements.erase(it);
+				App->gui->DeleteElement(element);
+				break;
+			}
+			else
+				++it;
 		}
-		else
-			++it;
 	}
 }
 
@@ -1864,6 +2004,7 @@ void UI_Scroll_Bar::ClearElements()
 	while (!elements.empty())
 	{
 		list<scroll_element>::iterator it = elements.begin();
+		App->gui->DeleteElement((*it).element);
 		elements.erase(it);
 	}
 
@@ -1875,10 +2016,13 @@ void UI_Scroll_Bar::ChangeHeightMovingRect()
 	// Taking lowest element vertical --
 	int lowest = 0;
 
-	for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+	if (!elements.empty())
 	{
-		if (((min_bar_v - moving_rect.y) + (*it).element->rect.y + (*it).element->rect.h + App->render->camera.y) > lowest)
-			lowest = ((min_bar_v - moving_rect.y) + (*it).element->rect.y + (*it).element->rect.h) + App->render->camera.y;
+		for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+		{
+			if (((min_bar_v - moving_rect.y) + (*it).element->rect.y + (*it).element->rect.h + App->render->camera.y) > lowest)
+				lowest = ((min_bar_v - moving_rect.y) + (*it).element->rect.y + (*it).element->rect.h) + App->render->camera.y;
+		}
 	}
 	// ----------------------------------
 
@@ -1908,10 +2052,13 @@ void UI_Scroll_Bar::ChangeWidthMovingRect()
 {
 	// Take higher element horizontal --
 	int higher = 0;
-	for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+	if (!elements.empty())
 	{
-		if (((min_bar_h - moving_rect.x) + (*it).element->rect.x + (*it).element->rect.w + App->render->camera.x) > higher)
-			higher = ((min_bar_h - moving_rect.x) + (*it).element->rect.x + (*it).element->rect.w) + App->render->camera.x;
+		for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+		{
+			if (((min_bar_h - moving_rect.x) + (*it).element->rect.x + (*it).element->rect.w + App->render->camera.x) > higher)
+				higher = ((min_bar_h - moving_rect.x) + (*it).element->rect.x + (*it).element->rect.w) + App->render->camera.x;
+		}
 	}
 	// ----------------------------------
 
@@ -1991,18 +2138,24 @@ void UI_Scroll_Bar::MoveBarV()
 		scroll_v = -floor((float)(position_bar * moving_distance) / bar_distance);
 		moving_rect.y = min_bar_v - scroll_v;
 
-		for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+		if (!elements.empty())
 		{
-			(*it).element->rect.y = (*it).starting_pos_y - scroll_v - App->render->camera.y;
+			for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+			{
+				(*it).element->rect.y = (*it).starting_pos_y - scroll_v - App->render->camera.y;
+			}
 		}
 	}
 	else
 	{
 		moving_rect.y = min_bar_v - scroll_v;
 
-		for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+		
 		{
-			(*it).element->rect.y = (*it).starting_pos_y - scroll_v - App->render->camera.y;
+			for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+			{
+				(*it).element->rect.y = (*it).starting_pos_y - scroll_v - App->render->camera.y;
+			}
 		}
 	}
 
@@ -2058,18 +2211,24 @@ void UI_Scroll_Bar::MoveBarH()
 		scroll_h = -floor((float)(position_bar * moving_distance) / bar_distance);
 		moving_rect.x = min_bar_h - scroll_h;
 
-		for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+		if (!elements.empty())
 		{
-			(*it).element->rect.x = (*it).starting_pos_x - scroll_h - App->render->camera.x;
+			for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+			{
+				(*it).element->rect.x = (*it).starting_pos_x - scroll_h - App->render->camera.x;
+			}
 		}
 	}
 	else
 	{
 		moving_rect.x = min_bar_h - scroll_h;
 
-		for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+		if (!elements.empty())
 		{
-			(*it).element->rect.x = (*it).starting_pos_x - scroll_h - App->render->camera.x;
+			for (list<scroll_element>::iterator it = elements.begin(); it != elements.end(); it++)
+			{
+				(*it).element->rect.x = (*it).starting_pos_x - scroll_h - App->render->camera.x;
+			}
 		}
 	}
 }
@@ -2192,6 +2351,7 @@ void UI_Check_Box::AddBox(iPoint pos, int size_w, int size_h, const char * name)
 	check_box* cb = new check_box(pos, size_w, size_h);
 	cb->button->layer = layer + 1;
 	cb->button->blit_layer = blit_layer;
+	cb->button->type = ui_button;
 	App->gui->elements_list.Push((UI_Element*)cb->button, cb->button->layer);
 	childs.push_back(cb->button);
 	check_box_list.push_back(cb);

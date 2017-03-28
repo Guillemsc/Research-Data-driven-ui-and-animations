@@ -41,8 +41,11 @@ public:
 
 	virtual bool isDone() { return change_scene; }
 
+public:
+	bool change_scene = false;
+	Scene* next_scene = nullptr;
+
 protected:
-	bool change_scene = false; 
 
 private:
 	char* name;
