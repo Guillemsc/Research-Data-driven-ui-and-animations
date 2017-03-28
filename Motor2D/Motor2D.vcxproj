@@ -97,7 +97,6 @@
     <ClCompile Include="j1Textures.cpp" />
     <ClCompile Include="j1Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
-    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SecondScene.cpp" />
   </ItemGroup>
   <ItemGroup>

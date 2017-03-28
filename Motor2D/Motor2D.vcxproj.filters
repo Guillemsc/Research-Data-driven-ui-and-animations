@@ -61,7 +61,6 @@
     <ClCompile Include="MenuScene.cpp">
       <Filter>Engine\3. Scenes ==========\MainScene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="DataDrivenUI.cpp">
       <Filter>Engine\1. Modules =========\DataDrivenUI</Filter>
     </ClCompile>
