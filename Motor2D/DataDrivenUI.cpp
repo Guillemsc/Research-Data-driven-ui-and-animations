@@ -54,8 +54,15 @@ bool DataDrivenUI::CleanUp()
 {
 	bool ret = true;
 
-	// Unload current scene
-	UnloadScene(current_scene->GetName());
+	// Delete all scenes
+	for(vector<DDUI_Scene*>::iterator it = scenes.begin(); it != scenes.end();)
+	{
+		(*it)->DeleteElements();
+		RELEASE(*it);
+		it = scenes.erase(it);
+	}
+
+	scenes.clear();
 
 	return ret;
 }
@@ -85,6 +92,24 @@ DDUI_Variable * DataDrivenUI::GetVariableByName(const char * name)
 	for (int i = 0; i < scenes.size(); i++)
 	{
 		DDUI_Variable* curr = scenes.at(i)->FindVariable(name);
+
+		if (curr != nullptr)
+		{
+			ret = curr;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+DDUI_Animation * DataDrivenUI::GetAnimationByName(const char * name)
+{
+	DDUI_Animation* ret = nullptr;
+
+	for (int i = 0; i < scenes.size(); i++)
+	{
+		DDUI_Animation* curr = scenes.at(i)->FindAnimation(name);
 
 		if (curr != nullptr)
 		{
@@ -676,6 +701,11 @@ void DDUI_Scene::AddVariable(DDUI_Variable * var)
 	variables.push_back(var);
 }
 
+void DDUI_Scene::AddAnimation(DDUI_Animation * anim)
+{
+	animations.push_back(anim);
+}
+
 DDUI_Element* DDUI_Scene::FindElement(const char * name)
 {
 	DDUI_Element* ret = nullptr;
@@ -708,6 +738,22 @@ DDUI_Variable * DDUI_Scene::FindVariable(const char * name)
 	return ret;
 }
 
+DDUI_Animation * DDUI_Scene::FindAnimation(const char * name)
+{
+	DDUI_Animation* ret = nullptr;
+
+	for (int i = 0; i < animations.size(); i++)
+	{
+		if (TextCmp(animations.at(i)->GetName(), name))
+		{
+			ret = animations.at(i);
+			break;
+		}
+	}
+
+	return ret;
+}
+
 void DDUI_Scene::DeleteElements()
 {
 	if (!elements.empty())
@@ -731,8 +777,18 @@ void DDUI_Scene::DeleteElements()
 		}
 	}
 
+	if (!animations.empty())
+	{
+		for (vector<DDUI_Animation*>::iterator it = animations.begin(); it != animations.end();)
+		{
+			RELEASE(*it);
+			it = animations.erase(it);
+		}
+	}
+
 	elements.clear();
 	variables.clear();
+	animations.clear();
 }
 
 DDUI_Element::DDUI_Element(const char * _name, UI_Element* _element)
@@ -814,4 +870,34 @@ void DDUI_Variable::SetMinValue(float value)
 {
 	min_value = value;
 	has_min_value = true;
+}
+
+const char * DDUI_Animation::GetName()
+{
+	return name.c_str();
+}
+
+UI_Element * DDUI_Animation::GetTarget()
+{
+	return target;
+}
+
+ddui_anim_type DDUI_Animation::GetType()
+{
+	return type;
+}
+
+bool DDUI_A_Movement::update()
+{
+	return false;
+}
+
+float DDUI_A_Movement::GetSpeed()
+{
+	return speed;
+}
+
+iPoint DDUI_A_Movement::GetTarget()
+{
+	return target;
 }
