@@ -132,4 +132,9 @@ But for our case with the cubic function is enough:
 
 ![BezierLaXupax2](https://wikimedia.org/api/rest_v1/media/math/render/svg/199d9916a0917ad0ae914189806693611c585a5b)
 
-Depending on the points that we give to the ecuation, we end up with a path, that we can then interpretate into code to have smooth movements. We can see examples of this on this web page: <http://easings.net/es#>, and in this one: <http://cubic-bezier.com/#>
+Depending on the points that we give to the ecuation, we end up with a path, that we can then interpretate into code to have smooth movements. We can see examples of this on this web pages:
+
+easings.net           |  cubic-bezier.com
+:-------------------------:|:-------------------------:
+[![Alt Description](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Screenshot%20at%20mar%2030%2001-13-15.png?raw=true)](http://easings.net/es#)|  [![Alt Description](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Screenshot%20at%20mar%2030%2001-12-41.png?raw=true)](http://cubic-bezier.com/#)
+
