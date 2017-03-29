@@ -543,7 +543,7 @@ UI_Image * DataDrivenUI::AddImage(pugi::xml_node element_node, DDUI_Scene * scen
 	AddVars(element_node, scene);
 
 	// Test
-	DDUI_A_Movement* m1 = new DDUI_A_Movement("hi", ddui_anim_type::ddui_anim_movement, image, iPoint(300, image->GetPos().y), 10, a_move_type::a_ease_in_ease_out);
+	DDUI_A_Movement* m1 = new DDUI_A_Movement("hi", ddui_anim_type::ddui_anim_movement, image, iPoint(300, image->GetPos().y), 5, a_move_type::a_ease_in_ease_out);
 	scene->AddAnimation(m1);
 	// -----
 
@@ -914,7 +914,9 @@ bool DDUI_A_Movement::update()
 		test_pos = starting_pos;
 	}
 
-	float destance_between_ends = abs(DistanceFromTwoPoints(starting_pos.x, starting_pos.y, destination.x, destination.y));
+	iPoint destance_between_ends;
+	destance_between_ends.x = starting_pos.x - destination.x;
+	destance_between_ends.y = starting_pos.y - destination.y;
 
 	App->render->DrawCircle(destination.x, destination.y, 5, 255, 255, 255);
 	App->render->DrawCircle(GetElement()->GetPos().x, GetElement()->GetPos().y, 5, 255, 255, 255);
@@ -929,17 +931,21 @@ bool DDUI_A_Movement::update()
 	case a_move_linear:
 		break;
 	case a_ease_in_ease_out:
-		points.push_back(fPoint(1.00f, 0.00f));
+		points.push_back(fPoint(1.00f, 0.0f));
 		points.push_back(fPoint(0.00f, 1.00f));
 		break;
 	}
 	points.push_back(fPoint(1, 1));
 
-	float bezier = Bezier(timer.ReadSec(), time, points).y;
+	fPoint bezier = Bezier(timer.ReadSec(), time, points);
+	
+	float m = bezier.y;
 
-	float new_distance = (destance_between_ends*bezier);
+	fPoint new_pos;
+	new_pos.x = starting_pos.x - m*destance_between_ends.x;
+	new_pos.y = starting_pos.y + m*destance_between_ends.y;
 
-	GetElement()->fSetPos(fPoint(starting_pos.x + (new_distance * cos(angle*DEGTORAD)), starting_pos.y + (new_distance * sin(angle*DEGTORAD))));
+	GetElement()->fSetPos(new_pos);
 
 	if (timer.ReadSec() > time)
 		stop = true;
@@ -948,12 +954,12 @@ bool DDUI_A_Movement::update()
 	{
 		for (float i = 0; i < 1; i += 0.01f)
 		{
-			float b = Bezier(i, 1, points).y;
+			//float b = Bezier(i, 1, points).y;
 			test_pos = iPoint(starting_pos.x + (Bezier(i, 1, points).x * 100), starting_pos.y - (Bezier(i, 1, points).y * 100));
 			App->render->DrawCircle(test_pos.x, test_pos.y, 1, 255, 255, 255);
 		}
 		test_pos = starting_pos;
-		test_pos = iPoint(starting_pos.x + (Bezier(bezier, 1, points).x * 100), starting_pos.y - (Bezier(bezier, 1, points).y * 100));
+		test_pos = iPoint(starting_pos.x + (Bezier(timer.ReadSec(), time, points).x * 100), starting_pos.y - (Bezier(timer.ReadSec(), time, points).y * 100));
 		App->render->DrawCircle(test_pos.x, test_pos.y, 2, 0, 255, 255);
 		App->render->DrawCircle(test_pos.x, starting_pos.y, 2, 0, 255, 255);
 		App->render->DrawCircle(starting_pos.x, test_pos.y, 2, 0, 255, 255);

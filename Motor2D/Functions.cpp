@@ -66,20 +66,26 @@ fPoint Bezier(float curr_time, float end_time, vector<fPoint> points)
 	fPoint ret = NULLPOINT;
 
 	float rel_time = curr_time / end_time;
+	//LOG("%f", rel_time);
 	
 	int i = points.size() - 1;
 
-	while (i > 0)
-	{
-		for (int k = 0; k < i; k++)
-		{
-			points.at(k).x = points.at(k).x + (rel_time * (points.at(k + 1).x - points.at(k).x));
-			points.at(k).y = points.at(k).y + (rel_time * (points.at(k + 1).y - points.at(k).y));
-		}
-		i--;
-	}
+	//while (i > 0)
+	//{
+	//	for (int k = 0; k < i; k++)
+	//	{
+	//		points.at(k).x = points.at(k).x + (rel_time * (points.at(k + 1).x - points.at(k).x));
+	//		points.at(k).y = points.at(k).y + (rel_time * (points.at(k + 1).y - points.at(k).y));
+	//	}
+	//	i--;
+	//}
 
-	ret = points.at(0);
+	ret.x = (points.at(0).x * pow(1 - rel_time, 3)) + (3*points.at(1).x * rel_time* pow(1 - rel_time, 2)) + (3 * points.at(2).x* pow(rel_time, 2)* (1 - rel_time)) + points.at(3).x * pow(rel_time, 3);
+	ret.y = (points.at(0).y * pow(1 - rel_time, 3)) + (3 * points.at(1).y * rel_time* pow(1 - rel_time, 2)) + (3 * points.at(2).y* pow(rel_time, 2)* (1 - rel_time)) + points.at(3).y * pow(rel_time, 3);
+
+
+
+	//ret = points.at(0);
 	return ret;
 }
 
