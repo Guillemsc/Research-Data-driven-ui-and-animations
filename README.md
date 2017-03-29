@@ -96,6 +96,8 @@ A more complex one:
  ```
  With that we can archive a decent/easy UI XML creation.
  
+![Code structure](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/check.png?raw=true)
+ 
  ## 2. UI Animations
  ### 2.1 Introduction
 Apart from easy to use and functional, and UI has to be pleasant and visual to the user.
