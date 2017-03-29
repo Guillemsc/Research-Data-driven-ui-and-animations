@@ -148,3 +148,6 @@ easings.net           |  cubic-bezier.com
 Depending on the type of movement that we use, we add the prefered points to the bézier equation.
 
  ## 3. Conclusion
+# It's worth?
+The high-level summary is that it is possible to automatically generate good quality user interfaces, but only in certain conditions.
+The most important trade-off to consider when deciding whether or not to try automatic generation is the amount of information that must be communicated to the automatic system in order for it to produce a good interface design.
