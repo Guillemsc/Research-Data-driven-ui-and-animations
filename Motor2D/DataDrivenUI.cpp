@@ -183,7 +183,6 @@ void DataDrivenUI::UnloadScene(const char * name)
 				++it;
 		}
 	}
-
 }
 
 void DataDrivenUI::PerformActions()
@@ -247,7 +246,6 @@ void DataDrivenUI::CheckForElements(pugi::xml_node window_node, DDUI_Scene * sce
 
 void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scene)
 {
-
 	// --------------------------------------------------- //
 	// Add here all the possible actions for every Element //
 	// --------------------------------------------------- //
@@ -266,9 +264,9 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 				UI_Button* button = (UI_Button*)element->GetElement();
 
 				// Button Actions
-				if (TextCmp(act_node.attribute("left_pressed").name(), "left_pressed"))
+				if (TextCmp(act_node.attribute("if_left_pressed").name(), "if_left_pressed"))
 				{
-					bool pressed = act_node.attribute("left_pressed").as_bool(true);
+					bool pressed = act_node.attribute("if_left_pressed").as_bool(true);
 
 					if (pressed && button->MouseClickEnterLeft())
 					{
@@ -332,9 +330,9 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 					element->GetElement()->SetEnabledAndChilds(!element->GetElement()->enabled);
 				}
 			}
-			if (TextCmp(act_node.attribute("is_enabled").name(), "is_enabled"))
+			if (TextCmp(act_node.attribute("if_enabled").name(), "if_enabled"))
 			{
-				bool enabled = act_node.attribute("is_enabled").as_bool(false);
+				bool enabled = act_node.attribute("if_enabled").as_bool(false);
 				if (enabled == element->GetElement()->enabled)
 				{
 					CheckForActions(act_node, scene);
@@ -409,6 +407,9 @@ void DataDrivenUI::CheckForAnimationType(pugi::xml_node act_node, DDUI_Scene* sc
 
 	string animation_type = act_node.attribute("animation").as_string("");
 
+	// --------------------------- //
+	// Add here all the animations //
+	// --------------------------- //
 	// Movement animation
 	if (TextCmp(animation_type.c_str(), "movement"))
 	{
@@ -421,7 +422,7 @@ void DataDrivenUI::CheckForAnimationType(pugi::xml_node act_node, DDUI_Scene* sc
 		if (TextCmp(type.c_str(), "linear"))
 			move_type = a_move_linear;
 		
-		DDUI_A_Movement* m1 = new DDUI_A_Movement("hi", element, destination, time, move_type);
+		DDUI_A_Movement* m1 = new DDUI_A_Movement("hi", element, destination, time, move_type, act_node);
 		scene->AddAnimation(m1);
 		element->SetOnAnimation(true);
 	}
@@ -948,10 +949,32 @@ ddui_anim_type DDUI_Animation::GetType()
 	return type;
 }
 
+bool DDUI_Animation::GetFinished()
+{
+	return finished;
+}
+
+void DDUI_Animation::SetFinished(bool set)
+{
+	finished = set;
+}
+
+pugi::xml_node DDUI_Animation::GetNode()
+{
+	return node;
+}
+
 bool DDUI_A_Movement::update()
 {
-	if (stop)
+	if (GetFinished())
+	{
+		if (first_time_finish)
+		{
+			App->data_ui->CheckForActions(GetNode(), App->data_ui->GetScene(App->scene->GetCurrentScene()->GetName()));
+			first_time_finish = false;
+		}
 		return true;
+	}
 
 	if (first_time)
 	{
@@ -997,7 +1020,7 @@ bool DDUI_A_Movement::update()
 
 	if (timer.ReadSec() > time)
 	{
-		stop = true;
+		SetFinished(true);
 		GetElement()->SetOnAnimation(false);
 	}
 
@@ -1028,9 +1051,4 @@ float DDUI_A_Movement::GetTime()
 iPoint DDUI_A_Movement::GetDestination()
 {
 	return destination;
-}
-
-float DDUI_A_Movement::BezierXAsTime(float curr_time, float end_time, vector<fPoint> points)
-{
-	return 0.0f;
 }

@@ -2,7 +2,7 @@
 
 <file>
      <scene name = "menu_scene">
-         <Window name = "main_window" position_x = "700" position_y = "200" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">
+         <Window name = "main_window" position_x = "700" position_y = "200" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "false" is_ui ="true">
            
                <Element type = "Image" name ="image" position_x ="700" position_y ="200" rect_x ="0" rect_y =" 0" rect_w ="225" rect_h ="219" dinamic ="false"/>
            
@@ -44,7 +44,7 @@
                </Element>
          </Window>
        
-         <Window name = "options_window" position_x = "400" position_y = "130" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">
+         <Window name = "options_window" position_x = "400" position_y = "130" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "false" is_ui ="true">
          
                <Element type = "Image" name ="image" position_x ="400" position_y ="130" rect_x ="0" rect_y =" 304" rect_w ="225" rect_h ="340" dinamic ="false"/> 
            
@@ -95,22 +95,25 @@
          </Window>
        
          <Action>
-                <act name ="button_start" left_pressed ="true">
+                <act name ="button_start" if_left_pressed ="true">
                      <act load_scene ="second_scene"/>
                </act>
-               <act name ="button_options" left_pressed ="true">
-                     <act name ="options_window" is_enabled ="true">
-                          <act name = "options_window" animation = "movement" movement_type = "linear" destination_x = "200" destination_y = "130" time = "5"/>
+               <act name ="button_options" if_left_pressed ="true">
+                     <act name ="options_window" if_enabled ="true">
+                          <act name = "options_window" animation = "movement" movement_type = "linear" destination_x = "200" destination_y = "130" time = "5">
+                                <act name ="options_window" set_enabled ="false"/>
+                          </act>
                      </act>
-                     <act name ="options_window" is_enabled ="false">
-                          <act name = "image" animation = "movement" movement_type = "linear" destination_x = "400" destination_y = "130" time = "5"/>
-                     </act>
+                     <act name ="options_window" if_enabled ="false">
+                          <act name ="options_window" set_enabled ="1"/>
+                          <act name = "options_window" animation = "movement" movement_type = "linear" destination_x = "400" destination_y = "130" time = "5"/>
+                      </act>
                </act>
-               <act name ="button_add" left_pressed ="true">
+               <act name ="button_add" if_left_pressed ="true">
                      <act name ="percentage" add ="10"/>
                      <act name ="percentage" set_to ="text_percent"/>
                </act>
-               <act name ="button_minus" left_pressed ="true">
+               <act name ="button_minus" if_left_pressed ="true">
                      <act name ="percentage" substract ="10"/>
                      <act name ="percentage" set_to ="text_percent"/>
                </act>

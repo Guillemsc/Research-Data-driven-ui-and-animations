@@ -37,7 +37,6 @@ public:
 	// Returns a DDUI_Animation given the name set on the XML
 	DDUI_Animation* GetAnimationByName(const char* name);
 
-private:
 	// Loads an scene given the scene name
 	void LoadScene(char* name);
 	DDUI_Scene* GetScene(const char* name);
@@ -205,21 +204,26 @@ enum ddui_anim_type
 class DDUI_Animation
 {
 public:
-	DDUI_Animation(const char* name, ddui_anim_type type, DDUI_Element* element = nullptr) : type(type), name(name), element(element) {};
+	DDUI_Animation(const char* name, ddui_anim_type type, DDUI_Element* element, pugi::xml_node node) : type(type), name(name), element(element), node(node){};
 	virtual ~DDUI_Animation() {};
 	virtual bool update() { return true; }
 
 	const char* GetName();
 	DDUI_Element* GetElement();
 	ddui_anim_type GetType();
+	bool GetFinished();
+	void SetFinished(bool set);
+	pugi::xml_node GetNode();
 private:
 
 public:
 
 private:
 	string         name;
-	DDUI_Element*    element = nullptr;
+	DDUI_Element*  element = nullptr;
 	ddui_anim_type type = ddui_anim_null;
+	bool		   finished = false;
+	pugi::xml_node node;
 };
 
 // --------------
@@ -236,8 +240,8 @@ enum a_move_type
 class DDUI_A_Movement : public DDUI_Animation
 {
 public:
-	DDUI_A_Movement(const char* name, DDUI_Element* target, iPoint destination, float time, a_move_type movement_type) 
-		: destination(destination), time(time), movement_type(movement_type), DDUI_Animation(name, ddui_anim_movement, target) 
+	DDUI_A_Movement(const char* name, DDUI_Element* target, iPoint destination, float time, a_move_type movement_type, pugi::xml_node node)
+		: destination(destination), time(time), movement_type(movement_type), DDUI_Animation(name, ddui_anim_movement, target, node) 
 	{
 		starting_pos = target->GetElement()->GetPos();
 		angle = AngleFromTwoPoints(GetElement()->GetElement()->GetPos().x, GetElement()->GetElement()->GetPos().y, destination.x, destination.y);
@@ -249,7 +253,6 @@ public:
 
 	float GetTime();
 	iPoint GetDestination();
-	float BezierXAsTime(float curr_time, float end_time, vector<fPoint> points);
 
 private:
 
@@ -260,9 +263,8 @@ private:
 	a_move_type movement_type = a_move_null;
 	j1Timer     timer;
 	float		angle = 0.0f;
-	bool		stop = false;
 	bool		first_time = true;
-
+	bool		first_time_finish = true;
 	iPoint      test_pos = NULLPOINT;
 };
 
