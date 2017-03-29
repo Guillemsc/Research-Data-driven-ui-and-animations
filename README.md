@@ -70,9 +70,11 @@ Actions also should go inside the scene bracket.
 Next, thanks to the ability to reference to other UI elements thanks to it's names, we can start to build basic behaviours, for examle:
 An easy one:
 ```C++
-<act name ="button_start" if_left_pressed ="true"> // If button left pressed
-   <act load_scene ="second_scene"/> // Load scene
-</act>
+<Action>
+    <act name ="button_start" if_left_pressed ="true"> // If button left pressed
+           <act load_scene ="second_scene"/> // Load scene
+    </act>
+</Action>
 ```
 A more complex one:
 ```C++
@@ -92,3 +94,42 @@ A more complex one:
       </act>
 </act>
  ```
+ With that we can archive a decent/easy UI XML creation.
+ 
+ ## 2. UI Animations
+ ### 2.1 Introduction
+Apart from easy to use and functional, and UI has to be pleasant and visual to the user.
+With that in mind, UI animations thake a hiuge part on the UI creation process and thoguht.
+We can find a lot of examples on mobile games, where everyghing has to be soft, bouncy and pleasant to the use.
+
+![UI image](https://farm4.staticflickr.com/3895/14819170192_829f0e9f5a_o.png)
+
+ ### 2.2 Initial thoughts
+To begin with, we have a hiuge amount of different animations that we could implement, but here we are just going to focus on UI movement animations, moving from one point to another, in a fixed amount of time.
+
+![UI_Amazing](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Amazing.png?raw=true)
+
+Going for there, we can have an element moving form point A to point B in a defined amount of time with a fixed speed. 
+But having a constant speed is quite boring and not pleasant at all, so we can start looking at curves of movement, to have different effects, for example:
+- Ease in
+- Ease out
+- Ease in out cubic
+- Ease in elastic
+- Ease out bounce
+- Etc..
+
+ ### 2.3 Bézier
+We can archive this type of movements with Bézier curves, which are very used on software development:
+
+![BezierLaXupa](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CocoaDrawingGuide/Art/bezier_curve_2x.png)
+
+You can find them, for example, in photoshop/illustrator/etc tools, to define paths, etc..
+The Bézier curves are defined by this recursive function: 
+
+![BezierLaXupa](https://wikimedia.org/api/rest_v1/media/math/render/svg/ed083d663a81418001a56a65f12d66ccad4dc588)
+
+But for our case with the cubic function is enough:
+
+![BezierLaXupax2](https://wikimedia.org/api/rest_v1/media/math/render/svg/199d9916a0917ad0ae914189806693611c585a5b)
+
+Depending on the points that we give to the ecuation, we end up with a path, that we can then interpretate into code to have smooth movements. We can see examples of this on this web page: <http://easings.net/es#>, and in this one: <http://cubic-bezier.com/#>
