@@ -169,3 +169,7 @@ Create the basic actions that you can observe on the solution:
 
 ### TODO 3
 Create a variable and increase the value of the number when pressing the buttons '+' and '-'.
+
+### Expected:
+![BezierLaXupax2](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Expected.png?raw=true)
+
