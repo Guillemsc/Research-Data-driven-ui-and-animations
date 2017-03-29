@@ -138,3 +138,13 @@ easings.net           |  cubic-bezier.com
 :-------------------------:|:-------------------------:
 [![Alt Description](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Screenshot%20at%20mar%2030%2001-13-15.png?raw=true)](http://easings.net/es#)|  [![Alt Description](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Screenshot%20at%20mar%2030%2001-12-41.png?raw=true)](http://cubic-bezier.com/#)
 
+ ### 2.4 Implementation
+ The implementation it's very similar to in the other cases, and they will be used as actions inside the Action brackets:
+```C++
+ <act name = "options_window" animation = "movement" movement_type = "smooth" destination_x = "-500" destination_y = "130" time = "0.5">
+     <Something here> // This will be executed when the animation finishes.
+ </act>
+ ```
+Depending on the type of movement that we use, we add the prefered points to the bézier equation.
+
+ ## 3. Conclusion
