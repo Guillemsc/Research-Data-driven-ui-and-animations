@@ -5,7 +5,7 @@ As we have less things on our projects being configured from code, the better. T
 This part of the research is going to talk about the creation and implementation of a UI data driven manager on our code, that will interpretate XML commands, to create full UI systems.
 
 ### 1.2 Initial thoughts
-To begin with, we have to determinate the type of UI base system that we are going to use, because that is going to change completly the internal organization of the data manager. Since it's impossibe to create a general data manager without knowing the type of UI that is going to use, this one is going to be based on the UI that i've created on the past. The general structure of this UI is the following:
+To begin with, we have to determine the type of UI base system that we are going to use, because that is going to change completly the internal organization of the data manager. Since it's impossibe to create a general data manager without knowing the type of UI that is going to use, this one is going to be based on the UI that i've created on the past. The general structure of this UI is the following:
 
 ![UI structure](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/UI.png?raw=true)
 
@@ -36,7 +36,7 @@ Next, we need the windows:
 <Window name = "main_window" position_x = "700" position_y = "200" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "false" is_ui ="true">
 </Window>
 ```
-From that, evey UI elements that pertains to this window should be created inside the window brackets.
+With that, evey UI elements that pertains to this window should be created inside the window brackets.
 Then we need the actual elements. They also have name to then be able to refeer to them in some actions.
 We can add the interpretation of any the UI elements that we have on the UI, for example: 
 ```C++
@@ -49,7 +49,7 @@ As we can see, we are creating a text here, but where do we define the actual te
      <var enabled ="false"/> // In this case the element won't start enabled
 </Element>
 ```
-With that, we can create any type of element, and in the case that we detect that the scene is changed, we unload and we load the new UI.
+We can create any type of element, and in the case that we detect that the scene is changed, we unload and we load the new UI.
 ![Code structure](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Start.png?raw=true)
 
 ### 1.4 Variables
@@ -59,7 +59,7 @@ As it can be very usefull when creating data driven ui actions, it can be intere
 ```
 ### 1.5 Actions
 Here is when the thing starts to become a little bit messy. It's important that we can define basic UI behaviour to really explore what data driven UI can do. 
-From this point, the possibilities of actions and interactions are infinite, to the level of even represent full c++ code, so let's try not go to deep on it.
+From this point, the possibilities of actions and interactions are infinite, to the level of even represent full c++ code, so let's try not get very complex.
 Actions also should go inside the scene bracket.
 ```C++
 <Scene>
@@ -107,11 +107,11 @@ We can find a lot of examples on mobile games, where everyghing has to be soft, 
 ![UI image](https://farm4.staticflickr.com/3895/14819170192_829f0e9f5a_o.png)
 
  ### 2.2 Initial thoughts
-To begin with, we have a hiuge amount of different animations that we could implement, but here we are just going to focus on UI movement animations, moving from one point to another, in a fixed amount of time.
+To begin with, we have a huge amount of different animations that we could implement, but in this research we are just going to focus on UI movement animations, moving from one point to another, in a fixed amount of time.
 
 ![UI_Amazing](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Amazing.png?raw=true)
 
-Going for there, we can have an element moving form point A to point B in a defined amount of time with a fixed speed. 
+Going from there, we can have an element moving form point A to point B in a defined amount of time with a fixed speed. 
 But having a constant speed is quite boring and not pleasant at all, so we can start looking at curves of movement, to have different effects, for example:
 - Ease in
 - Ease out
