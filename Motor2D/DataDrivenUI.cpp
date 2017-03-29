@@ -421,6 +421,8 @@ void DataDrivenUI::CheckForAnimationType(pugi::xml_node act_node, DDUI_Scene* sc
 		// Type of movements
 		if (TextCmp(type.c_str(), "linear"))
 			move_type = a_move_linear;
+		else if (TextCmp(type.c_str(), "smooth"))
+			move_type = a_move_test;
 		
 		DDUI_A_Movement* m1 = new DDUI_A_Movement("hi", element, destination, time, move_type, act_node);
 		scene->AddAnimation(m1);
@@ -983,12 +985,6 @@ bool DDUI_A_Movement::update()
 		test_pos = starting_pos;
 	}
 
-	// Debug
-	App->render->DrawCircle(destination.x, destination.y, 5, 255, 255, 255);
-	App->render->DrawCircle(GetElement()->GetElement()->GetPos().x, GetElement()->GetElement()->GetPos().y, 5, 255, 255, 255);
-	App->render->DrawCircle(starting_pos.x, starting_pos.y, 5, 255, 255, 255);
-	App->render->DrawLine(starting_pos.x, starting_pos.y, destination.x, destination.y, 255, 255, 255);
-
 	// Logic
 	float destance_between_ends = DistanceFromTwoPoints(starting_pos.x, starting_pos.y, destination.x, destination.y);
 	float angle = AngleFromTwoPoints(starting_pos.x, starting_pos.y, destination.x, destination.y);
@@ -1001,7 +997,7 @@ bool DDUI_A_Movement::update()
 	{
 	case a_move_linear:
 		break;
-	case a_ease_in_ease_out:
+	case a_move_test:
 		points.push_back(fPoint(1.00f, 0.0f));
 		points.push_back(fPoint(0.00f, 1.00f));
 		break;
@@ -1026,6 +1022,11 @@ bool DDUI_A_Movement::update()
 
 	if (App->debug_mode)
 	{
+		App->render->DrawCircle(destination.x, destination.y, 5, 255, 255, 255);
+		App->render->DrawCircle(GetElement()->GetElement()->GetPos().x, GetElement()->GetElement()->GetPos().y, 5, 255, 255, 255);
+		App->render->DrawCircle(starting_pos.x, starting_pos.y, 5, 255, 255, 255);
+		App->render->DrawLine(starting_pos.x, starting_pos.y, destination.x, destination.y, 255, 255, 255);
+
 		for (float i = 0; i < 1; i += 0.01f)
 		{
 			test_pos = iPoint(starting_pos.x + (Bezier(i, 1, points).x * 100), starting_pos.y - (Bezier(i, 1, points).y * 100));

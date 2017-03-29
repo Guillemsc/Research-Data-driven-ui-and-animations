@@ -42,6 +42,11 @@
                     <var text = "CREDITS"/>
                     <var click_through ="true"/>
                </Element>
+         
+               <Element type ="Text" name ="text_credits" position_x ="583" position_y = "550" font ="4" spacing ="0" color_r ="153" color_g ="153" color_b ="153">
+                    <var text = "By Guillem Sunyer."/>
+                    <var enabled ="false"/>
+               </Element>
          </Window>
        
          <Window name = "options_window" position_x = "400" position_y = "130" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "false" is_ui ="true">
@@ -100,13 +105,13 @@
                </act>
                <act name ="button_options" if_left_pressed ="true">
                      <act name ="options_window" if_enabled ="true">
-                          <act name = "options_window" animation = "movement" movement_type = "linear" destination_x = "200" destination_y = "130" time = "5">
+                          <act name = "options_window" animation = "movement" movement_type = "smooth" destination_x = "-500" destination_y = "130" time = "0.5">
                                 <act name ="options_window" set_enabled ="false"/>
                           </act>
                      </act>
                      <act name ="options_window" if_enabled ="false">
                           <act name ="options_window" set_enabled ="1"/>
-                          <act name = "options_window" animation = "movement" movement_type = "linear" destination_x = "400" destination_y = "130" time = "5"/>
+                          <act name = "options_window" animation = "movement" movement_type = "smooth" destination_x = "400" destination_y = "130" time = "0.5"/>
                       </act>
                </act>
                <act name ="button_add" if_left_pressed ="true">
@@ -117,7 +122,23 @@
                      <act name ="percentage" substract ="10"/>
                      <act name ="percentage" set_to ="text_percent"/>
                </act>
+               <act name ="button_credits" if_left_pressed ="true">
+                     <act name ="text_credits" set_enabled ="1"/>
+               </act>
          </Action>
+     </scene>
+     <scene name = "second_scene">
+        <Window name = "second_window" position_x = "600" position_y = "300" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "false" is_ui ="true">
+                <Element type ="Text" name ="text" position_x ="463" position_y = "312" font ="3" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
+                    <var text = "THIS IS ANOTHER SCENE, PRESS TO RETURN"/>
+               </Element>
+               <Element type ="Button" name ="button_return" position_x = "0" position_y = "0" size_w = "2000" size_h = "1000" dinamic = "false"/>
+        </Window>
+       <Action>
+               <act name ="button_return" if_left_pressed ="true">
+                     <act load_scene ="menu_scene"/>
+               </act>
+       </Action>
      </scene>
 </file>
  <!--
