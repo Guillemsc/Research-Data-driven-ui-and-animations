@@ -153,3 +153,19 @@ Depending on the type of movement that we use, we add the prefered points to the
 # It's worth?
 The high-level summary is that it is possible to automatically generate good quality user interfaces, but only in certain conditions.
 The most important trade-off to consider when deciding whether or not to try automatic generation is the amount of information that must be communicated to the automatic system in order for it to produce a good interface design.
+
+## 4. Exercice
+The code of the solution and the exercice that you will find it's just only a gideline and it's hard to adapt to another project/type of UI. Use it just as a gideline for the strucuture.
+
+In this exercice you will be creating a basic UI with it's behaviours, using only the XML, as an experience in how fast, easy, difficult, etc.. compared with in-code UI creation.
+
+### TODO 1
+Create all and only the UI elements using the blueprints that you can find on the XML.
+
+### TODO 2
+Create the basic actions that you can observe on the solution:
+- Change of scene.
+- Animation of the window when pressing options.
+
+### TODO 3
+Create a variable and increase the value of the number when pressing the buttons '+' and '-'.
