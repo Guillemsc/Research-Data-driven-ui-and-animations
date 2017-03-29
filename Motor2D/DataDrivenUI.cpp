@@ -67,9 +67,9 @@ bool DataDrivenUI::CleanUp()
 	return ret;
 }
 
-UI_Element* DataDrivenUI::GetElementByName(const char * name)
+DDUI_Element* DataDrivenUI::GetElementByName(const char * name)
 {
-	UI_Element* ret = nullptr;
+	DDUI_Element* ret = nullptr;
 
 	for (int i = 0; i < scenes.size(); i++)
 	{
@@ -77,7 +77,7 @@ UI_Element* DataDrivenUI::GetElementByName(const char * name)
 
 		if (curr != nullptr)
 		{
-			ret = curr->GetElement();
+			ret = curr;
 			break;
 		}
 	}
@@ -256,14 +256,14 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 		string name = act_node.attribute("name").as_string("");
 
 		// Find Element
-		UI_Element* element = GetElementByName(name.c_str());
+		DDUI_Element* element = GetElementByName(name.c_str());
 
-		if (element != nullptr && element->type != ui_element::ui_element_null)
+		if (element != nullptr && element->GetElement()->type != ui_element::ui_element_null)
 		{
 			// Button
-			if (element->type == ui_element::ui_button)
+			if (element->GetElement()->type == ui_element::ui_button)
 			{
-				UI_Button* button = (UI_Button*)element;
+				UI_Button* button = (UI_Button*)element->GetElement();
 
 				// Button Actions
 				if (TextCmp(act_node.attribute("left_pressed").name(), "left_pressed"))
@@ -281,54 +281,70 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 				}
 			}
 			// CheckBox
-			else if (element->type == ui_element::ui_check_box)
+			else if (element->GetElement()->type == ui_element::ui_check_box)
 			{
 
 			}
 			// Colored rect
-			else if (element->type == ui_element::ui_colored_rect)
+			else if (element->GetElement()->type == ui_element::ui_colored_rect)
 			{
 
 			}
 			// Image
-			else if (element->type == ui_element::ui_image)
+			else if (element->GetElement()->type == ui_element::ui_image)
 			{
 	
 			}
 			// Scroll Bar
-			else if (element->type == ui_element::ui_scroll_bar)
+			else if (element->GetElement()->type == ui_element::ui_scroll_bar)
 			{
 
 			}
 			// Text
-			else if (element->type == ui_element::ui_text)
+			else if (element->GetElement()->type == ui_element::ui_text)
 			{
 
 			}
 			// Text Input
-			else if (element->type == ui_element::ui_text_input)
+			else if (element->GetElement()->type == ui_element::ui_text_input)
 			{
 
 			}
 			// Window
-			else if (element->type == ui_element::ui_window)
+			else if (element->GetElement()->type == ui_element::ui_window)
 			{
 			
 			}
 
-			// General Actions for Elements
-			if (TextCmp(act_node.attribute("enabled").name(), "enabled"))
+			// --------------------------------------------------- //
+			// Add here all the possible actions for every element //
+			// --------------------------------------------------- //
+			if (TextCmp(act_node.attribute("set_enabled").name(), "set_enabled"))
 			{
-				int enabled = act_node.attribute("enabled").as_int(-1);
+				int enabled = act_node.attribute("set_enabled").as_int(-1);
 
 				if (enabled == 0 || enabled == 1)
 				{
-					element->SetEnabledAndChilds(enabled);
+					element->GetElement()->SetEnabledAndChilds(enabled);
 				}
 				else
 				{
-					element->SetEnabledAndChilds(!element->enabled);
+					element->GetElement()->SetEnabledAndChilds(!element->GetElement()->enabled);
 				}
+			}
+			if (TextCmp(act_node.attribute("is_enabled").name(), "is_enabled"))
+			{
+				bool enabled = act_node.attribute("is_enabled").as_bool(false);
+				if (enabled == element->GetElement()->enabled)
+				{
+					CheckForActions(act_node, scene);
+				}
+			}
+
+			// Animations
+			if (TextCmp(act_node.attribute("animation").name(), "animation"))
+			{
+				CheckForAnimationType(act_node, scene, element);
 			}
 		}
 
@@ -355,11 +371,11 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 				if (TextCmp(act_node.attribute("set_to").name(), "set_to"))
 				{
 					string element_name = act_node.attribute("set_to").as_string("");
-					UI_Element* element = GetElementByName(element_name.c_str());
+					DDUI_Element* element = GetElementByName(element_name.c_str());
 
-					if (element->type == ui_element::ui_text)
+					if (element->GetElement()->type == ui_element::ui_text)
 					{
-						UI_Text* text = (UI_Text*)element;
+						UI_Text* text = (UI_Text*)element->GetElement();
 						p2SString str("%0.f", variable->GetValue());
 						string s = str.GetString();
 						text->SetText(s);
@@ -383,6 +399,31 @@ void DataDrivenUI::CheckForActions(pugi::xml_node action_node, DDUI_Scene * scen
 			}
 		}
 		
+	}
+}
+
+void DataDrivenUI::CheckForAnimationType(pugi::xml_node act_node, DDUI_Scene* scene, DDUI_Element* element)
+{
+	if (element->GetOnAnimation())
+		return;
+
+	string animation_type = act_node.attribute("animation").as_string("");
+
+	// Movement animation
+	if (TextCmp(animation_type.c_str(), "movement"))
+	{
+		string type = act_node.attribute("movement_type").as_string();
+		iPoint destination = { act_node.attribute("destination_x").as_int(0), act_node.attribute("destination_y").as_int(0) };
+		float time = act_node.attribute("time").as_float(0.0f);
+		a_move_type move_type = a_move_null;
+
+		// Type of movements
+		if (TextCmp(type.c_str(), "linear"))
+			move_type = a_move_linear;
+		
+		DDUI_A_Movement* m1 = new DDUI_A_Movement("hi", element, destination, time, move_type);
+		scene->AddAnimation(m1);
+		element->SetOnAnimation(true);
 	}
 }
 
@@ -541,11 +582,6 @@ UI_Image * DataDrivenUI::AddImage(pugi::xml_node element_node, DDUI_Scene * scen
 	}
 
 	AddVars(element_node, scene);
-
-	// Test
-	DDUI_A_Movement* m1 = new DDUI_A_Movement("hi", ddui_anim_type::ddui_anim_movement, image, iPoint(300, image->GetPos().y), 5, a_move_type::a_ease_in_ease_out);
-	scene->AddAnimation(m1);
-	// -----
 
 	return image;
 }
@@ -825,6 +861,16 @@ UI_Element * DDUI_Element::GetElement()
 	return element;
 }
 
+void DDUI_Element::SetOnAnimation(bool set)
+{
+	on_animation = set;
+}
+
+bool DDUI_Element::GetOnAnimation()
+{
+	return on_animation;
+}
+
 DDUI_Variable::DDUI_Variable(const char * _name, float _value)
 {
 	name = _name;
@@ -892,7 +938,7 @@ const char * DDUI_Animation::GetName()
 	return name.c_str();
 }
 
-UI_Element * DDUI_Animation::GetElement()
+DDUI_Element * DDUI_Animation::GetElement()
 {
 	return element;
 }
@@ -914,17 +960,19 @@ bool DDUI_A_Movement::update()
 		test_pos = starting_pos;
 	}
 
-	iPoint destance_between_ends;
-	destance_between_ends.x = starting_pos.x - destination.x;
-	destance_between_ends.y = starting_pos.y - destination.y;
-
+	// Debug
 	App->render->DrawCircle(destination.x, destination.y, 5, 255, 255, 255);
-	App->render->DrawCircle(GetElement()->GetPos().x, GetElement()->GetPos().y, 5, 255, 255, 255);
+	App->render->DrawCircle(GetElement()->GetElement()->GetPos().x, GetElement()->GetElement()->GetPos().y, 5, 255, 255, 255);
 	App->render->DrawCircle(starting_pos.x, starting_pos.y, 5, 255, 255, 255);
 	App->render->DrawLine(starting_pos.x, starting_pos.y, destination.x, destination.y, 255, 255, 255);
 
+	// Logic
+	float destance_between_ends = DistanceFromTwoPoints(starting_pos.x, starting_pos.y, destination.x, destination.y);
+	float angle = AngleFromTwoPoints(starting_pos.x, starting_pos.y, destination.x, destination.y);
+
 	vector<fPoint> points;
 
+	// Points
 	points.push_back(fPoint(0, 0));
 	switch (movement_type)
 	{
@@ -942,19 +990,21 @@ bool DDUI_A_Movement::update()
 	float m = bezier.y;
 
 	fPoint new_pos;
-	new_pos.x = starting_pos.x - m*destance_between_ends.x;
-	new_pos.y = starting_pos.y + m*destance_between_ends.y;
+	new_pos.x = starting_pos.x + (m*destance_between_ends * cos(angle*DEGTORAD));
+	new_pos.y = starting_pos.y + (m*destance_between_ends * sin(angle*DEGTORAD));
 
-	GetElement()->fSetPos(new_pos);
+	GetElement()->GetElement()->fSetPos(new_pos);
 
 	if (timer.ReadSec() > time)
+	{
 		stop = true;
+		GetElement()->SetOnAnimation(false);
+	}
 
 	if (App->debug_mode)
 	{
 		for (float i = 0; i < 1; i += 0.01f)
 		{
-			//float b = Bezier(i, 1, points).y;
 			test_pos = iPoint(starting_pos.x + (Bezier(i, 1, points).x * 100), starting_pos.y - (Bezier(i, 1, points).y * 100));
 			App->render->DrawCircle(test_pos.x, test_pos.y, 1, 255, 255, 255);
 		}

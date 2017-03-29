@@ -29,7 +29,7 @@ public:
 	bool CleanUp();
 
 	// Returns an UI_Element given the name set on the XML
-	UI_Element* GetElementByName(const char* name);
+	DDUI_Element* GetElementByName(const char* name);
 
 	// Returns a DDUI_Variable given the name set on the XML
 	DDUI_Variable* GetVariableByName(const char* name);
@@ -53,6 +53,9 @@ private:
 
 	// Given a node, finds and adds all the actions to the scene
 	void CheckForActions(pugi::xml_node action_node, DDUI_Scene* scene);
+
+	// Given a node, finds and creates animations
+	void CheckForAnimationType(pugi::xml_node action_node, DDUI_Scene* scene, DDUI_Element* element);
 
 	// Given a node, finds and adds properties to an UI_Element
 	void CheckForGeneralVars(pugi::xml_node element_node, UI_Element* element);
@@ -101,6 +104,7 @@ public:
 	// Adds an anition to the scene
 	void AddAnimation(DDUI_Animation* anim);
 
+	// Update working animations
 	void UpdateAnimations();
 
 	// Finds an element stored on the scene given a name set on the XML
@@ -140,12 +144,15 @@ public:
 
 	const char* GetName();
 	UI_Element* GetElement();
+	bool GetOnAnimation();
+	void SetOnAnimation(bool set);
 private:
 
 public:
 
 private:
 	string      name;
+	bool		on_animation = false;
 	UI_Element* element = nullptr;
 };
 
@@ -198,12 +205,12 @@ enum ddui_anim_type
 class DDUI_Animation
 {
 public:
-	DDUI_Animation(const char* name, ddui_anim_type type, UI_Element* element = nullptr) : type(type), name(name), element(element) {};
+	DDUI_Animation(const char* name, ddui_anim_type type, DDUI_Element* element = nullptr) : type(type), name(name), element(element) {};
 	virtual ~DDUI_Animation() {};
 	virtual bool update() { return true; }
 
 	const char* GetName();
-	UI_Element* GetElement();
+	DDUI_Element* GetElement();
 	ddui_anim_type GetType();
 private:
 
@@ -211,7 +218,7 @@ public:
 
 private:
 	string         name;
-	UI_Element*    element = nullptr;
+	DDUI_Element*    element = nullptr;
 	ddui_anim_type type = ddui_anim_null;
 };
 
@@ -229,11 +236,11 @@ enum a_move_type
 class DDUI_A_Movement : public DDUI_Animation
 {
 public:
-	DDUI_A_Movement(const char* name, ddui_anim_type type, UI_Element* target, iPoint destination, float time, a_move_type movement_type) 
-		: destination(destination), time(time), movement_type(movement_type), DDUI_Animation(name, type, target) 
+	DDUI_A_Movement(const char* name, DDUI_Element* target, iPoint destination, float time, a_move_type movement_type) 
+		: destination(destination), time(time), movement_type(movement_type), DDUI_Animation(name, ddui_anim_movement, target) 
 	{
-		starting_pos = target->GetPos();
-		angle = AngleFromTwoPoints(GetElement()->GetPos().x, GetElement()->GetPos().y, destination.x, destination.y);
+		starting_pos = target->GetElement()->GetPos();
+		angle = AngleFromTwoPoints(GetElement()->GetElement()->GetPos().x, GetElement()->GetElement()->GetPos().y, destination.x, destination.y);
 		first_time = true;
 	};
 

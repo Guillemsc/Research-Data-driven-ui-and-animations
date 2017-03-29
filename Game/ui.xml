@@ -4,9 +4,8 @@
      <scene name = "menu_scene">
          <Window name = "main_window" position_x = "700" position_y = "200" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">
            
-               <Element type = "Image" name ="image" position_x ="1000" position_y ="200" rect_x ="0" rect_y =" 0" rect_w ="225" rect_h ="219" dinamic ="false"/>
+               <Element type = "Image" name ="image" position_x ="700" position_y ="200" rect_x ="0" rect_y =" 0" rect_w ="225" rect_h ="219" dinamic ="false"/>
            
-                 <!--
                <Element type ="Text" name ="text" position_x ="713" position_y = "212" font ="3" spacing ="0" color_r ="255" color_g ="255" color_b ="255">
                     <var text = "SUPER AWESOME GAME"/>
                </Element>
@@ -43,9 +42,8 @@
                     <var text = "CREDITS"/>
                     <var click_through ="true"/>
                </Element>
-            -->
          </Window>
-          <!--
+       
          <Window name = "options_window" position_x = "400" position_y = "130" size_w = "225" size_h = "219" blit_layer = "1" dinamic = "true" is_ui ="true">
          
                <Element type = "Image" name ="image" position_x ="400" position_y ="130" rect_x ="0" rect_y =" 304" rect_w ="225" rect_h ="340" dinamic ="false"/> 
@@ -101,7 +99,12 @@
                      <act load_scene ="second_scene"/>
                </act>
                <act name ="button_options" left_pressed ="true">
-                     <act name ="options_window" enabled ="-1"/>  
+                     <act name ="options_window" is_enabled ="true">
+                          <act name = "options_window" animation = "movement" movement_type = "linear" destination_x = "200" destination_y = "130" time = "5"/>
+                     </act>
+                     <act name ="options_window" is_enabled ="false">
+                          <act name = "image" animation = "movement" movement_type = "linear" destination_x = "400" destination_y = "130" time = "5"/>
+                     </act>
                </act>
                <act name ="button_add" left_pressed ="true">
                      <act name ="percentage" add ="10"/>
@@ -112,12 +115,13 @@
                      <act name ="percentage" set_to ="text_percent"/>
                </act>
          </Action>
-     -->
      </scene>
 </file>
  <!--
 
 ......... UI Elements .........
+
+ <act name = "image" animation = "movement" movement_type = "linear" destination_x = "0" destination_y = "0" time = "5">
 
  <Window name ="main_window" position_x = "10" position_y = "10" size_w = "300" size_h = "300" blit_layer = "1" dinamic = "true" is_ui ="true">
  </Window>
@@ -169,6 +173,7 @@
     <act name ="button_plus" left_pressed ="true">
          <act name ="percentage" add ="10"/>
          <act name ="percentage" set_to ="text_percent"/>
+         <act name = "image" animation = "movement" movement_type = "linear" destination_x = "100" destination_y = "100" time = "5"/> 
     </act>
 </Action>
 
