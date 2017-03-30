@@ -159,6 +159,9 @@ The code of the solution and the exercice that you will find it's just only a gi
 
 In this exercice you will be creating a basic UI with it's behaviours, using only the XML, as an experience in how fast, easy, difficult, etc.. compared with in-code UI creation.
 
+### Download link
+Download exercice and solution: <http://www.mediafire.com/file/xwy95p4us45ffw1/DataDrivenUI.zip>
+
 ### TODO 1
 Create all and only the UI elements using the blueprints that you can find on the XML.
 
