@@ -175,4 +175,60 @@ Create a variable and increase the value of the number when pressing the buttons
 
 ### Expected:
 ![BezierLaXupax2](https://github.com/Guillemsc/Research-Data-driven-ui-and-animations/blob/master/ImagesFolder/Expected.png?raw=true)
-
+### Positions
+#### Right
+ - Main window: position_x = "700" position_y = "200" size_w = "225" size_h = "219"
+ - Background image: position_x ="700" position_y ="200" rect_x ="0" rect_y =" 0" rect_w ="225"
+ - Text ("super awesome game"): position_x ="713" position_y = "212" font ="3" spacing ="0"
+ - Button start: position_x = "717" position_y = "250" size_w = "194" size_h = "49"
+ ```C++
+ * "over" rect_x ="0" rect_y ="219" rect_w ="190" rect_h ="49"
+ * "pressed" rect_x ="196" rect_y ="219" rect_w ="194" rect_h ="49"
+ * "idle" rect_x ="395" rect_y ="219" rect_w ="190" rect_h ="49"
+ ```
+ - Start game: position_x ="754" position_y = "265" font ="2"
+ - Button options: position_x = "717" position_y = "310" size_w = "194" size_h = "37"
+  ```C++
+ * "idle" rect_x ="0" rect_y ="268" rect_w ="190" rect_h ="36"
+ * "pressed" rect_x ="196" rect_y ="268" rect_w ="194" rect_h ="36"
+ * "over" rect_x ="395" rect_y ="268" rect_w ="190" rect_h ="36"
+  ```
+- Options text: position_x ="775" position_y = "318" font ="2"
+- Button credits: position_x = "717" position_y = "360" size_w = "194" size_h = "37"
+  ```C++
+  * "idle" rect_x ="0" rect_y ="268" rect_w ="190" rect_h ="36"
+  * "pressed" rect_x ="196" rect_y ="268" rect_w ="194" rect_h ="36"
+  * "over" rect_x ="395" rect_y ="268" rect_w ="190" rect_h ="36"
+  ```
+ - Text("credits"): position_x ="775" position_y = "368" font ="2"
+  
+  #### Left
+  - Main window: position_x = "400" position_y = "130" size_w = "225" size_h = "219"
+  - Backgroud image: position_x ="400" position_y ="130" rect_x ="0" rect_y =" 304" rect_w ="225" rect_h ="340"
+  - Text("name"): position_x ="415" position_y = "156" font ="4" spacing ="0"
+  - Text Back image: position_x ="465" position_y ="150" rect_x ="0" rect_y =" 722" rect_w ="145" rect_h ="28"
+  - Text input: position_x = "473" position_y = "156" size_w = "133" font = "4"
+  - Text("cool?"): position_x ="415" position_y = "200" font ="4" spacing ="0"
+  - Check box: position_x = "470" position_y = "190" size_w = "50" size_h = "50" multiple_choices = "false"
+  ```C++
+  * "idle" rect_x ="37" rect_y ="778" rect_w ="36" rect_h ="36"
+  * "pressed" rect_x ="0" rect_y ="778" rect_w ="36" rect_h ="36"
+  * "name" position_x = "470" position_y = "190" size_w = "36" size_h = "36"
+  ```
+  - Text("yes"): position_x ="513" position_y = "200" font ="4" spacing ="0"
+  - Text("how cool?"): position_x ="415" position_y = "250" font ="4" spacing ="0"
+  - Button add: position_x = "510" position_y = "280" size_w = "36" size_h = "36"
+   ```C++
+   * "over" rect_x ="0" rect_y ="644" rect_w ="36" rect_h ="36"
+   * "pressed" rect_x ="0" rect_y ="644" rect_w ="36" rect_h ="36"
+   * "idle" rect_x ="0" rect_y ="644" rect_w ="36" rect_h ="36"
+   ```
+   - Button substract: position_x = "415" position_y = "280" size_w = "36" size_h = "36"
+   ```C++
+   * "over" rect_x ="0" rect_y ="680" rect_w ="36" rect_h ="36"
+   * "pressed" rect_x ="0" rect_y ="680" rect_w ="36" rect_h ="36"
+   * "idle" rect_x ="0" rect_y ="680" rect_w ="36" rect_h ="36"
+   ```
+   - Image background number: position_x ="458" position_y ="284" rect_x ="0" rect_y =" 750" rect_w ="45" rect_h ="28"
+   - Text number: position_x ="473" position_y = "290" font ="4" spacing ="0"
+   
