@@ -200,7 +200,7 @@ Create a variable and increase the value of the number when pressing the buttons
 
 - Text("credits"): position_x ="775" position_y = "368" font ="2"
   
-  #### Left
+#### Left
 - Main window: position_x = "400" position_y = "130" size_w = "225" size_h = "219"
 - Backgroud image: position_x ="400" position_y ="130" rect_x ="0" rect_y =" 304" rect_w ="225" rect_h ="340"
 - Text("name"): position_x ="415" position_y = "156" font ="4" spacing ="0"
